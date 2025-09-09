@@ -2,7 +2,6 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { initializeDatabase } from '@/lib/db';
 import { Quote } from '@/entities/Quote';
-import { formatDate } from '@/lib/utils';
 import Link from 'next/link';
 
 interface PageProps {
@@ -49,13 +48,22 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title,
     description,
+    alternates: {
+      canonical: `/quotes/${slug}`,
+    },
     openGraph: {
       title,
       description,
       type: 'article',
       publishedTime: quote.postedAt?.toISOString(),
       authors: quote.twitterHandle ? [`@${quote.twitterHandle}`] : [],
-      images: [`/quotes/${quote.slug}/opengraph-image`],
+      url: `/quotes/${slug}`,
+      images: [
+        {
+          url: `/quotes/${quote.slug}/opengraph-image`,
+          alt: `Quote from ${quote.llmSource}`,
+        },
+      ],
     },
     twitter: {
       card: 'summary_large_image',
@@ -63,7 +71,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       creator: quote.twitterHandle ? `@${quote.twitterHandle}` : undefined,
       title,
       description,
-      images: [`/quotes/${quote.slug}/opengraph-image`],
+      images: [
+        {
+          url: `/quotes/${quote.slug}/opengraph-image`,
+          alt: `Quote from ${quote.llmSource}`,
+        },
+      ],
     },
   };
 }
@@ -76,9 +89,32 @@ export default async function QuotePage({ params }: PageProps) {
     notFound();
   }
 
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://llmquotes.com';
+  const permalink = `${baseUrl}/quotes/${slug}`;
+  const openQ = '“';
+  const closeQ = '”';
+  const dash = '—';
+  let shareText = `${openQ}${quote.content}${closeQ}\n\n${dash} ${quote.llmSource}`;
+  // Reserve ~24 chars for t.co URL, plus 2 newline chars before it
+  const urlReserve = 24;
+  const newlineReserve = 2;
+  const maxLen = 280 - urlReserve - newlineReserve;
+  if (shareText.length > maxLen) {
+    const staticLen = (openQ + closeQ + "\n\n" + `${dash} `).length + quote.llmSource.length;
+    const allowedQuoteLen = Math.max(0, maxLen - staticLen);
+    const ellipsis = '…';
+    const trimmed = quote.content.length > allowedQuoteLen
+      ? quote.content.slice(0, Math.max(0, allowedQuoteLen - 1)) + ellipsis
+      : quote.content;
+    shareText = `${openQ}${trimmed}${closeQ}\n\n${dash} ${quote.llmSource}`;
+  }
+  // Put the permalink two lines below the author line
+  const shareBody = `${shareText}\n\n${permalink}`;
+  const shareHref = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareBody)}`;
+
   return (
-    <div className="py-8">
-      <div className="brutal-card p-8 max-w-4xl mx-auto">
+    <div className="nb-container py-8">
+      <div className="brutal-card p-8 w-full">
         <div className="mb-8">
           <h1 className="text-4xl mb-6 leading-tight">&ldquo;{quote.content}&rdquo;</h1>
           <p className="text-2xl mb-4">— {quote.llmSource}</p>
@@ -103,20 +139,9 @@ export default async function QuotePage({ params }: PageProps) {
             <div>
               <p className="text-sm">
                 <strong>Status:</strong>{' '}
-                <span className={`brutal-badge ${quote.status === 'posted' ? 'badge-posted' : 'badge-pending'}`}>
+                <span className={`status-badge ${quote.status === 'posted' ? 'status-posted' : 'status-pending'}`}>
                   {quote.status}
                 </span>
-              </p>
-              <p className="text-sm mt-2">
-                <strong>Submitted:</strong> {formatDate(quote.createdAt)}
-              </p>
-              {quote.postedAt && (
-                <p className="text-sm mt-2">
-                  <strong>Posted:</strong> {formatDate(quote.postedAt)}
-                </p>
-              )}
-              <p className="text-sm mt-2">
-                <strong>Views:</strong> {quote.views}
               </p>
             </div>
 
@@ -131,19 +156,14 @@ export default async function QuotePage({ params }: PageProps) {
                   View on X
                 </a>
               )}
-              <button
-                onClick={() => {
-                  const url = window.location.href;
-                  const text = `"${quote.content}" - ${quote.llmSource}`;
-                  window.open(
-                    `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`,
-                    '_blank'
-                  );
-                }}
+              <a
+                href={shareHref}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="brutal-button"
               >
                 Share
-              </button>
+              </a>
             </div>
           </div>
         </div>

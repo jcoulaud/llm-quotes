@@ -59,6 +59,9 @@ CRON_SECRET=your-cron-secret
 # Next Auth
 NEXTAUTH_SECRET=your-nextauth-secret
 NEXTAUTH_URL=http://localhost:3000
+
+# Public site URL (used for metadata and tweet links)
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
 
 ### 3. Run Development Server

@@ -240,6 +240,30 @@ body {
   text-decoration: line-through;
 }
 
+/* Subtle status badge (less button-like) */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 10px;
+  border: var(--nb-border) solid var(--nb-ink);
+  background: transparent;
+  color: var(--nb-ink);
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: 0;
+  text-transform: none; /* keep lowercase like "posted" */
+  box-shadow: none;
+}
+.status-badge.status-posted {
+  border-color: var(--nb-ink);
+}
+.status-badge.status-pending {
+  border-color: var(--nb-ink);
+  border-style: dashed;
+}
+
 .label {
   display: block;
   margin-bottom: 6px;

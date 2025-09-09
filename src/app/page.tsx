@@ -1,10 +1,11 @@
 import Link from "next/link";
 import SubmitQuoteButton from "@/components/SubmitQuoteButton";
 import { initializeDatabase } from '@/lib/db';
-import { Quote } from '@/entities/Quote';
 import QuoteCard from '@/components/QuoteCard';
+import type { QuoteDTO } from '@/types/quote';
+import { Quote } from '@/entities/Quote';
 
-async function getRecentQuotes() {
+async function getRecentQuotes(): Promise<QuoteDTO[]> {
   try {
     const dataSource = await initializeDatabase();
     const quoteRepository = dataSource.getRepository(Quote);
@@ -15,7 +16,21 @@ async function getRecentQuotes() {
       take: 10,
     });
 
-    return quotes;
+    // Convert TypeORM entities (class instances) to plain objects safe for Client Components
+    const plain: QuoteDTO[] = quotes.map((q) => ({
+      id: q.id,
+      content: q.content,
+      llmSource: q.llmSource,
+      twitterHandle: q.twitterHandle ?? undefined,
+      status: q.status,
+      slug: q.slug,
+      createdAt: q.createdAt instanceof Date ? q.createdAt.toISOString() : (q.createdAt as unknown as string),
+      postedAt: q.postedAt instanceof Date ? q.postedAt.toISOString() : (q.postedAt as unknown as string | undefined),
+      tweetId: q.tweetId ?? undefined,
+      views: q.views,
+    }));
+
+    return plain;
   } catch (error) {
     console.error('Error fetching recent quotes:', error);
     return [];

@@ -2,10 +2,10 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import QuoteCard from '@/components/QuoteCard';
-import { Quote } from '@/entities/Quote';
+import type { QuoteDTO } from '@/types/quote';
 
 export default function QuotesPage() {
-  const [quotes, setQuotes] = useState<Quote[]>([]);
+  const [quotes, setQuotes] = useState<QuoteDTO[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
   const [total, setTotal] = useState(0);

@@ -1,11 +1,11 @@
 'use client';
 
 import Link from 'next/link';
-import { Quote } from '@/entities/Quote';
 import { formatDate, getStatusColor } from '@/lib/utils';
+import type { QuoteDTO } from '@/types/quote';
 
 interface QuoteCardProps {
-  quote: Quote;
+  quote: QuoteDTO;
   showStatus?: boolean;
 }
 

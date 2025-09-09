@@ -5,6 +5,8 @@ import Header from "@/components/Header";
 import ToastProvider from "@/components/ToastProvider";
 
 export const metadata: Metadata = {
+  // Ensures all relative metadata URLs resolve as absolute
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://llmquotes.com'),
   title: "LLM Quotes - Share AI Wisdom",
   description: "Submit and discover the best quotes from AI language models",
   openGraph: {

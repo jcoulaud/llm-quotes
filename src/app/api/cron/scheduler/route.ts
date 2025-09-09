@@ -37,7 +37,8 @@ export async function GET(request: NextRequest) {
         const tweetId = await postTweet(
           quote.content,
           quote.llmSource,
-          quote.twitterHandle
+          quote.twitterHandle,
+          quote.slug
         );
 
         if (tweetId) {
