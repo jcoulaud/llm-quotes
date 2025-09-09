@@ -53,9 +53,9 @@ export default async function Home() {
         <div className='decoration decoration-square absolute bottom-8 right-10 opacity-20'></div>
         <div className='nb-container'>
           <h1 className='hero-text mb-6'>
-            The Internet’s Best LLM Quotes
+            The Internet’s Best LLM Quotes Collected
             <br />
-            Collected and Posted
+            and Posted
           </h1>
           <p className='subtitle mb-6 max-w-xl'>
             Real outputs from ChatGPT, Claude, Grok, Gemini, and more. Submit your favorites — the
@@ -85,15 +85,17 @@ export default async function Home() {
             <span className='badge badge-approved mb-4'>Step 1</span>
             <h3 className='nb-h3 mb-2'>Submit</h3>
             <p className='text-sm opacity-80'>
-              Share your favorite AI‑generated quote and pick the LLM source. Add your Twitter
-              handle to be tagged.
+              Share your favorite quote and pick the LLM source. Add your Twitter handle to be
+              tagged.
             </p>
           </div>
           <div className='brutal-card'>
             <div className='card-accent' style={{ background: 'var(--nb-blue)' }}></div>
             <span className='badge badge-blue mb-4'>Step 2</span>
             <h3 className='nb-h3 mb-2'>Moderate</h3>
-            <p className='text-sm opacity-80'>Admins review, approve, or schedule posts.</p>
+            <p className='text-sm opacity-80'>
+              Admins review, approve, and schedule posts (for now). Community voting coming soon.
+            </p>
           </div>
           <div className='brutal-card'>
             <div className='card-accent' style={{ background: 'var(--nb-pink)' }}></div>

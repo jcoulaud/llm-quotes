@@ -2,16 +2,8 @@
 
 import { useState } from 'react';
 import { quoteSubmissionSchema } from '@/lib/validation';
+import { LLM_SOURCES } from '@/types/llm-sources';
 import { checkRateLimit, incrementRateLimit } from '@/lib/rate-limit';
-
-const LLM_SOURCES = [
-  'ChatGPT',
-  'Claude',
-  'Grok',
-  'Gemini',
-  'Perplexity',
-  'Other',
-] as const;
 
 export default function SubmitForm({ compact = false }: { compact?: boolean }) {
   const [formData, setFormData] = useState({

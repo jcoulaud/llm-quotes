@@ -6,6 +6,7 @@ export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
     const status = searchParams.get('status');
+    const llmSource = searchParams.get('llmSource');
     const limit = parseInt(searchParams.get('limit') || '30');
     const offset = parseInt(searchParams.get('offset') || '0');
 
@@ -18,6 +19,15 @@ export async function GET(request: NextRequest) {
     
     if (status && status !== 'all') {
       queryBuilder.where('quote.status = :status', { status });
+    }
+    if (llmSource && llmSource.trim() !== '') {
+      // Case-insensitive partial match on LLM source
+      const like = `%${llmSource}%`;
+      if (status && status !== 'all') {
+        queryBuilder.andWhere('quote.llmSource ILIKE :like', { like });
+      } else {
+        queryBuilder.where('quote.llmSource ILIKE :like', { like });
+      }
     }
 
     queryBuilder
