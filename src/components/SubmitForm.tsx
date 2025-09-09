@@ -164,16 +164,16 @@ export default function SubmitForm({ compact = false }: { compact?: boolean }) {
           </div>
         </div>
 
-        <div className="flex justify-between items-center pt-4 border-t">
+        <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-3 pt-4 border-t">
           <button
             type="submit"
-            className="btn btn-primary"
+            className="btn btn-primary w-full md:w-auto"
             disabled={isSubmitting || remaining === 0}
           >
             {isSubmitting ? 'Submitting...' : 'Submit Quote'}
           </button>
           
-          <span className="text-sm text-gray-600">
+          <span className="text-sm text-gray-600 mt-1 md:mt-0 md:ml-4 self-center text-center w-full md:w-auto md:self-auto md:text-left">
             {remaining > 0 
               ? `${remaining} submission${remaining === 1 ? '' : 's'} remaining today`
               : 'Daily limit reached'}
