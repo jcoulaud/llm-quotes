@@ -67,6 +67,19 @@ body {
   background-size: 48px 48px, 48px 48px;
 }
 
+/* Global text selection color */
+::selection {
+  background: var(--nb-yellow);
+  color: var(--nb-ink);
+  text-shadow: none;
+}
+/* Firefox */
+::-moz-selection {
+  background: var(--nb-yellow);
+  color: var(--nb-ink);
+  text-shadow: none;
+}
+
 /* Neo‑Brutalist Components */
 .card,
 .brutal-card {
@@ -97,6 +110,7 @@ body {
   box-shadow: 6px 6px 0 0 var(--nb-pink);
   z-index: 2;
 }
+
 
 .btn,
 .brutal-button {
@@ -224,6 +238,11 @@ body {
   color: var(--nb-white);
   border-color: var(--nb-ink);
 }
+.badge-blue {
+  background: var(--nb-blue);
+  color: var(--nb-white);
+  border-color: var(--nb-ink);
+}
 .badge-scheduled {
   background: var(--nb-pink);
   color: var(--nb-white);
@@ -328,6 +347,7 @@ body {
   letter-spacing: -0.02em;
   text-transform: uppercase;
 }
+
 .nb-h2 {
   font-size: clamp(28px, 3.5vw, 40px);
   font-weight: 900;
@@ -394,6 +414,9 @@ body {
   margin: 0 auto;
   padding-inline: 32px;
 }
+/* Hover utilities */
+.nb-hover-purple:hover { color: var(--nb-purple); }
+/* Optional wider container for hero sections */
 .nb-shadow-pink {
   box-shadow: var(--nb-shadow) var(--nb-shadow) 0 0 var(--nb-pink);
 }

@@ -19,18 +19,18 @@ export default function QuoteCard({ quote, showStatus = true }: QuoteCardProps) 
       
       <div className="flex justify-between items-center flex-wrap gap-4 pt-4 mt-2">
         <div className="flex items-center gap-3">
-          {showStatus && (
+          {showStatus && quote.status !== 'posted' && (
             <span className={`badge ${getStatusColor(quote.status)}`}>
               {quote.status}
             </span>
           )}
           {quote.twitterHandle && (
             <span className="text-sm">
-              by <a 
+              by <a
                 href={`https://x.com/${quote.twitterHandle}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-medium hover:text-orange-600 transition-colors"
+                className="font-medium nb-hover-purple transition-colors"
               >
                 @{quote.twitterHandle}
               </a>
@@ -41,9 +41,9 @@ export default function QuoteCard({ quote, showStatus = true }: QuoteCardProps) 
         <div className="flex items-center gap-4">
           <span className="text-sm opacity-60">{formatDate(quote.createdAt)}</span>
           {quote.status === 'posted' && (
-            <Link 
+            <Link
               href={`/quotes/${quote.slug}`}
-              className="text-sm font-medium hover:text-orange-600"
+              className="badge badge-posted"
             >
               VIEW →
             </Link>

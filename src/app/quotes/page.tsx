@@ -41,7 +41,6 @@ export default function QuotesPage() {
     <div className="max-w-6xl mx-auto px-8 py-12">
       <div className="mb-12">
         <h1 className="nb-h1 mb-2">All Quotes</h1>
-        <p className="subtitle mb-8">Total: {total} quotes</p>
         <div className="flex gap-2 flex-wrap">
           <button onClick={() => setFilter('all')} className={filter === 'all' ? 'brutal-button' : 'brutal-button ghost'}>
             ALL ({total})
@@ -70,7 +69,7 @@ export default function QuotesPage() {
           <p className="text-lg mb-0">No quotes found</p>
         </div>
       ) : (
-        <div className="grid gap-4">
+        <div className="grid gap-6 md:grid-cols-2">
           {quotes.map((quote) => (
             <QuoteCard key={quote.id} quote={quote} />
           ))}
