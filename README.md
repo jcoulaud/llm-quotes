@@ -21,6 +21,7 @@ A Neo-Brutalist styled web application for submitting, moderating, and sharing q
 - **Tailwind CSS** (Neo-Brutalism custom styles)
 - **Twitter API v2**
 - **Vercel** for deployment and cron jobs
+ - **twitterapi.io** for tweet lookups (read-only)
 
 ## Setup
 
@@ -43,6 +44,9 @@ TWITTER_API_KEY=your-twitter-api-key
 TWITTER_API_SECRET=your-twitter-api-secret
 TWITTER_ACCESS_TOKEN=your-twitter-access-token
 TWITTER_ACCESS_SECRET=your-twitter-access-secret
+
+# twitterapi.io (Read tweets)
+TWITTERAPIIO_API_KEY=your-twitterapi-io-api-key
 
 # Admin
 ADMIN_PASSWORD=your-admin-password
@@ -110,6 +114,14 @@ The cron job will run hourly to post scheduled quotes.
 2. Create a new app with read/write permissions
 3. Generate API keys and access tokens
 4. Add to environment variables
+
+## Tweet Lookup (Read) via twitterapi.io
+
+Posting uses the official Twitter API (see `src/lib/twitter.ts`). Reading existing tweets by ID uses `twitterapi.io` (see `src/lib/tweetReader.ts`) to avoid elevated access requirements.
+
+- Provide `TWITTERAPIIO_API_KEY` in your env to enable lookups
+- Server route: `GET /api/tweets/lookup?ids=123,456` returns the raw response from twitterapi.io
+- You should store `tweetId` when posting (already handled in the scheduler) so you can retrieve details later
 
 ## Features in Detail
 
