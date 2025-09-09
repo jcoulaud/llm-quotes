@@ -75,7 +75,7 @@ export default function AdminPage() {
       } else {
         setLimits(null);
       }
-    } catch (e) {
+    } catch {
       setLimits(null);
     } finally {
       setLimitsLoading(false);
@@ -95,7 +95,7 @@ export default function AdminPage() {
       } else {
         setStats(null);
       }
-    } catch (e) {
+    } catch {
       setStats(null);
     }
   }, []);
@@ -111,7 +111,7 @@ export default function AdminPage() {
       toast.info('Logged out');
       // Redirect to login
       window.location.href = '/admin/login';
-    } catch (e) {
+    } catch {
       toast.error('Failed to log out');
     }
   };

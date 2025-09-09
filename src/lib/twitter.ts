@@ -96,10 +96,11 @@ export async function postTweet(
       };
       console.error('Error posting tweet (ApiResponseError):', JSON.stringify(details, null, 2));
       // Try to surface a human-readable reason if available
+      const errorData = error.data as { detail?: string; errors?: Array<{ message?: string }> };
       const reason =
         // v2 style
-        (error.data as any)?.detail ||
-        (Array.isArray((error.data as any)?.errors) && (error.data as any).errors[0]?.message) ||
+        errorData?.detail ||
+        (Array.isArray(errorData?.errors) && errorData.errors[0]?.message) ||
         error.message ||
         `HTTP ${error.code}`;
       throw new Error(`Twitter error ${error.code ?? ''}: ${reason}`.trim());

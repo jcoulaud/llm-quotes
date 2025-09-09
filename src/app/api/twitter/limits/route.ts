@@ -62,7 +62,7 @@ export async function GET(request: NextRequest) {
     // Probe the endpoint with an intentionally invalid payload to get headers without posting
     try {
       // Using base .post to request fullResponse; this should 400 with rate-limit headers
-      const resp = await client.v2.post('tweets', { text: '' }, { fullResponse: true } as any);
+      const resp = await client.v2.post('tweets', { text: '' }, { fullResponse: true });
       // If this ever succeeds (shouldn't), use provided rateLimit
       return NextResponse.json(toResponse(resp.rateLimit as RateLimit, 'probe'));
     } catch (e: unknown) {

@@ -1,10 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useToast } from '@/components/ToastProvider';
 
-export default function AdminLoginPage() {
+function AdminLoginForm() {
   const params = useSearchParams();
   const next = params.get('next') || '/admin';
   const router = useRouter();
@@ -30,7 +30,7 @@ export default function AdminLoginPage() {
       }
       toast.success('Logged in');
       router.replace(next);
-    } catch (e) {
+    } catch {
       toast.error('Login failed');
     } finally {
       setLoading(false);
@@ -61,3 +61,10 @@ export default function AdminLoginPage() {
   );
 }
 
+export default function AdminLoginPage() {
+  return (
+    <Suspense fallback={<div className="nb-container py-16">Loading...</div>}>
+      <AdminLoginForm />
+    </Suspense>
+  );
+}

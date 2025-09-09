@@ -82,7 +82,7 @@ export default function Header() {
       <header className='relative z-10 nb-nav'>
         <nav className='nb-container nb-nav-inner flex justify-between items-center'>
           <Link href='/' className='flex items-center gap-3 group'>
-            <Image src='/logo.svg' alt='Logo' width={180} height={60} />
+            <Image src='/logo.svg' alt='Logo' width={180} height={60} style={{ height: 'auto' }} />
           </Link>
           {/* Desktop nav */}
           <div className='hidden md:flex items-center gap-3'>

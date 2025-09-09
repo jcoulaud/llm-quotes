@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
       maxAge: 60 * 60 * 6, // 6 hours
     });
     return res;
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
   }
 }
