@@ -49,7 +49,9 @@ TWITTER_ACCESS_SECRET=your-twitter-access-secret
 TWITTERAPIIO_API_KEY=your-twitterapi-io-api-key
 
 # Admin
+ADMIN_USERNAME=your-admin-username
 ADMIN_PASSWORD=your-admin-password
+ADMIN_SESSION_SECRET=your-long-random-secret
 
 # Cron
 CRON_SECRET=your-cron-secret
@@ -73,13 +75,15 @@ Visit http://localhost:3000
 - `/submit` - Submit new quotes
 - `/quotes` - Browse all quotes with filters
 - `/quotes/[slug]` - Individual quote page with SEO
-- `/admin` - Admin dashboard (requires basic auth: username: `admin`)
+- `/admin` - Admin dashboard (redirects to `/admin/login` when not authenticated)
 
 ## Admin Access
 
-Navigate to `/admin` and use:
-- Username: `admin`
+Navigate to `/admin` to open the login modal and use:
+- Username: `[ADMIN_USERNAME from .env]`
 - Password: `[ADMIN_PASSWORD from .env]`
+
+The admin login issues a signed, HTTP-only session cookie. Ensure `ADMIN_SESSION_SECRET` (or `NEXTAUTH_SECRET`) is set for HMAC signing. Moderation API routes validate this cookie server‑side.
 
 ## Database Schema
 

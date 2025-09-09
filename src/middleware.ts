@@ -1,42 +1,30 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { ADMIN_SESSION_COOKIE } from '@/lib/adminConstants';
+import { verifySessionTokenEdge } from '@/lib/adminAuthEdge';
 
-export function middleware(request: NextRequest) {
-  // Check if the request is for the admin route
+export async function middleware(request: NextRequest) {
   if (request.nextUrl.pathname.startsWith('/admin')) {
-    const authHeader = request.headers.get('authorization');
-    
-    if (!authHeader) {
-      return new NextResponse('Authentication required', {
-        status: 401,
-        headers: {
-          'WWW-Authenticate': 'Basic realm="Admin Access"',
-        },
-      });
+    const isLoginPage = request.nextUrl.pathname === '/admin/login';
+    const token = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
+    const ok = await verifySessionTokenEdge(token);
+
+    // Redirect logged-in users away from the login page
+    if (isLoginPage && ok) {
+      const url = new URL('/admin', request.url);
+      return NextResponse.redirect(url);
     }
 
-    const [scheme, encoded] = authHeader.split(' ');
-    
-    if (scheme !== 'Basic') {
-      return new NextResponse('Invalid authentication', { status: 401 });
+    // Redirect unauthenticated users trying to access /admin (except /admin/login)
+    if (!isLoginPage && !ok) {
+      const url = new URL('/admin/login', request.url);
+      url.searchParams.set('next', request.nextUrl.pathname + request.nextUrl.search);
+      return NextResponse.redirect(url);
     }
 
-    const decoded = Buffer.from(encoded, 'base64').toString();
-    const [username, password] = decoded.split(':');
-
-    // Simple authentication - in production, use proper auth
-    const adminPassword = process.env.ADMIN_PASSWORD || 'changeme123';
-    
-    if (username !== 'admin' || password !== adminPassword) {
-      return new NextResponse('Invalid credentials', {
-        status: 401,
-        headers: {
-          'WWW-Authenticate': 'Basic realm="Admin Access"',
-        },
-      });
-    }
+    // Otherwise allow through
+    return NextResponse.next();
   }
-
   return NextResponse.next();
 }
 

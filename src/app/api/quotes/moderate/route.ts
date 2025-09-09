@@ -1,9 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { initializeDatabase } from '@/lib/db';
 import { Quote } from '@/entities/Quote';
+import { ADMIN_SESSION_COOKIE, verifySessionToken } from '@/lib/adminAuth';
 
 export async function POST(request: NextRequest) {
   try {
+    // Verify signed admin session
+    const token = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
+    const session = verifySessionToken(token);
+    if (!session) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const body = await request.json();
     const { quoteId, action, scheduledFor } = body;
 

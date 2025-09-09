@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { Quote } from '@/entities/Quote';
 import { formatDate } from '@/lib/utils';
+import { useToast } from '@/components/ToastProvider';
 
 export default function AdminPage() {
   const [quotes, setQuotes] = useState<Quote[]>([]);
@@ -11,6 +12,8 @@ export default function AdminPage() {
   const [selectedQuote, setSelectedQuote] = useState<Quote | null>(null);
   const [scheduledDate, setScheduledDate] = useState('');
   const [scheduledTime, setScheduledTime] = useState('');
+  const toast = useToast();
+  // Admin access is enforced at middleware level with redirect to /admin/login
 
   const fetchQuotes = useCallback(async () => {
     setLoading(true);
@@ -32,13 +35,27 @@ export default function AdminPage() {
     fetchQuotes();
   }, [fetchQuotes]);
 
+  // Login handled on /admin/login page
+
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/admin/logout', { method: 'POST' });
+      setQuotes([]);
+      toast.info('Logged out');
+      // Redirect to login
+      window.location.href = '/admin/login';
+    } catch (e) {
+      toast.error('Failed to log out');
+    }
+  };
+
   const handleModerate = async (quoteId: number, action: string) => {
     try {
       const body: Record<string, unknown> = { quoteId, action };
       
       if (action === 'schedule') {
         if (!scheduledDate || !scheduledTime) {
-          alert('Please select date and time for scheduling');
+          toast.error('Please select date and time for scheduling');
           return;
         }
         body.scheduledFor = new Date(`${scheduledDate}T${scheduledTime}`).toISOString();
@@ -51,25 +68,31 @@ export default function AdminPage() {
       });
 
       if (response.ok) {
-        alert(`Quote ${action}d successfully!`);
+        const actionLabel = action === 'approve' ? 'approved' : action === 'reject' ? 'rejected' : 'scheduled';
+        toast.success(`Quote ${actionLabel} successfully!`);
         fetchQuotes();
         setSelectedQuote(null);
         setScheduledDate('');
         setScheduledTime('');
       } else {
         const error = await response.json();
-        alert(`Error: ${error.error}`);
+        toast.error(`Error: ${error.error}`);
       }
     } catch (error) {
       console.error('Error moderating quote:', error);
-      alert('Failed to moderate quote');
+      toast.error('Failed to moderate quote');
     }
   };
 
   return (
-    <div className="py-8">
+    <div className="nb-container pt-12 pb-12">
       <div className="brutal-card p-6 mb-8">
-        <h1 className="text-4xl mb-4 uppercase">Admin Dashboard</h1>
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="text-4xl uppercase">Admin Dashboard</h1>
+          <button className="brutal-button ghost" onClick={handleLogout} aria-label="Log out">
+            Log out
+          </button>
+        </div>
         <div className="flex gap-4 flex-wrap">
           <button
             onClick={() => setFilter('pending')}
@@ -216,6 +239,7 @@ export default function AdminPage() {
           ))}
         </div>
       )}
+      
     </div>
   );
 }
