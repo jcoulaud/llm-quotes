@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Quote } from '@/entities/Quote';
 import { formatDate } from '@/lib/utils';
 
@@ -12,11 +12,7 @@ export default function AdminPage() {
   const [scheduledDate, setScheduledDate] = useState('');
   const [scheduledTime, setScheduledTime] = useState('');
 
-  useEffect(() => {
-    fetchQuotes();
-  }, [filter]);
-
-  const fetchQuotes = async () => {
+  const fetchQuotes = useCallback(async () => {
     setLoading(true);
     try {
       const response = await fetch(`/api/quotes/list?status=${filter}`);
@@ -30,11 +26,15 @@ export default function AdminPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filter]);
+
+  useEffect(() => {
+    fetchQuotes();
+  }, [fetchQuotes]);
 
   const handleModerate = async (quoteId: number, action: string) => {
     try {
-      const body: any = { quoteId, action };
+      const body: Record<string, unknown> = { quoteId, action };
       
       if (action === 'schedule') {
         if (!scheduledDate || !scheduledTime) {
@@ -117,7 +117,7 @@ export default function AdminPage() {
           {quotes.map((quote) => (
             <div key={quote.id} className="brutal-card p-6">
               <div className="mb-4">
-                <p className="text-xl mb-2">"{quote.content}"</p>
+                <p className="text-xl mb-2">&ldquo;{quote.content}&rdquo;</p>
                 <p className="text-lg">— {quote.llmSource}</p>
                 {quote.twitterHandle && (
                   <p className="text-sm mt-2">

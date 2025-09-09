@@ -2,7 +2,7 @@ import { ImageResponse } from 'next/og';
 import { initializeDatabase } from '@/lib/db';
 import { Quote } from '@/entities/Quote';
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
 export const size = {
   width: 1200,
   height: 630,
@@ -20,8 +20,9 @@ async function getQuote(slug: string): Promise<Quote | null> {
   }
 }
 
-export default async function Image({ params }: { params: { slug: string } }) {
-  const quote = await getQuote(params.slug);
+export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const quote = await getQuote(slug);
 
   if (!quote) {
     return new ImageResponse(
@@ -119,7 +120,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
                 color: '#000',
               }}
             >
-              "{quote.content}"
+              &ldquo;{quote.content}&rdquo;
             </div>
             <div
               style={{

@@ -306,6 +306,7 @@ body {
 .nb-modal .brutal-textarea,
 .nb-modal .brutal-select,
 .nb-modal .brutal-button,
+.nb-modal .btn,
 .nb-modal .success-box,
 .nb-modal .error-box {
   box-shadow: 4px 4px 0 0 var(--nb-yellow) !important;
@@ -316,6 +317,13 @@ body {
 .nb-modal .brutal-textarea:hover,
 .nb-modal .brutal-input:hover,
 .nb-modal .brutal-select:hover { transform: none; box-shadow: 4px 4px 0 0 var(--nb-yellow) !important; }
+
+/* Keep hover transform for buttons in modal */
+.nb-modal .brutal-button:hover,
+.nb-modal .btn:hover { 
+  transform: translate(-2px, -2px); 
+  box-shadow: 6px 6px 0 0 var(--nb-yellow) !important; 
+}
 
 /* Header fixed inner padding */
 .nb-nav-inner { padding-top: 8px; padding-bottom: 10px; }

@@ -80,9 +80,6 @@ export default function Header() {
             <Image src="/logo.svg" alt="Logo" width={180} height={60} />
           </Link>
           <div className="flex items-center gap-3">
-            <Link href="/#how-it-works" className="text-sm font-medium transition-colors">
-              HOW IT WORKS
-            </Link>
             <Link href="/quotes" className="text-sm font-medium transition-colors">
               QUOTES
             </Link>

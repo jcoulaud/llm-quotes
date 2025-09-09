@@ -29,7 +29,7 @@ export default function SubmitForm({ compact = false }: { compact?: boolean }) {
     setSuccess(false);
 
     // Check rate limit
-    const { allowed, remaining } = checkRateLimit();
+    const { allowed } = checkRateLimit();
     if (!allowed) {
       setErrors({ general: 'You have reached the daily limit of 5 submissions. Please try again tomorrow.' });
       return;
@@ -39,7 +39,7 @@ export default function SubmitForm({ compact = false }: { compact?: boolean }) {
     const validation = quoteSubmissionSchema.safeParse(formData);
     if (!validation.success) {
       const fieldErrors: Record<string, string> = {};
-      validation.error.errors.forEach((error) => {
+      validation.error.issues.forEach((error) => {
         if (error.path[0]) {
           fieldErrors[error.path[0] as string] = error.message;
         }
@@ -168,7 +168,7 @@ export default function SubmitForm({ compact = false }: { compact?: boolean }) {
             {errors.twitterHandle && (
               <p className="error-text">{errors.twitterHandle}</p>
             )}
-            <p className="text-sm text-gray-500 mt-1">We'll tag you when posted</p>
+            <p className="text-sm text-gray-500 mt-1">We&apos;ll tag you when posted</p>
           </div>
         </div>
 

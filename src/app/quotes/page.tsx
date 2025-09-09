@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import QuoteCard from '@/components/QuoteCard';
 import { Quote } from '@/entities/Quote';
 
@@ -10,11 +10,7 @@ export default function QuotesPage() {
   const [filter, setFilter] = useState('all');
   const [total, setTotal] = useState(0);
 
-  useEffect(() => {
-    fetchQuotes();
-  }, [filter]);
-
-  const fetchQuotes = async () => {
+  const fetchQuotes = useCallback(async () => {
     setLoading(true);
     try {
       const params = new URLSearchParams();
@@ -35,7 +31,11 @@ export default function QuotesPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filter]);
+
+  useEffect(() => {
+    fetchQuotes();
+  }, [fetchQuotes]);
 
   return (
     <div className="max-w-6xl mx-auto px-8 py-12">

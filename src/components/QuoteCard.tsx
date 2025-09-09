@@ -13,7 +13,7 @@ export default function QuoteCard({ quote, showStatus = true }: QuoteCardProps) 
   return (
     <div className="brutal-card mb-4">
       <div className="mb-4">
-        <p className="text-base mb-3 leading-relaxed">"{quote.content}"</p>
+        <p className="text-base mb-3 leading-relaxed">&ldquo;{quote.content}&rdquo;</p>
         <p className="font-medium">— {quote.llmSource}</p>
       </div>
       

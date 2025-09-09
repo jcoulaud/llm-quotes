@@ -38,7 +38,7 @@ export default function RootLayout({
         </main>
         
         <footer className="relative z-10 nb-footer mt-20">
-          <div className="nb-container py-20">
+          <div className="nb-container py-32">
             <div className="flex justify-between items-center">
               <div className="text-sm">
                 Made by {""}

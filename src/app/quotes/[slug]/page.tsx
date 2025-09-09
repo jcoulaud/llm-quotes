@@ -6,7 +6,7 @@ import { formatDate } from '@/lib/utils';
 import Link from 'next/link';
 
 interface PageProps {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 async function getQuote(slug: string): Promise<Quote | null> {
@@ -32,7 +32,8 @@ async function getQuote(slug: string): Promise<Quote | null> {
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const quote = await getQuote(params.slug);
+  const { slug } = await params;
+  const quote = await getQuote(slug);
   
   if (!quote) {
     return {
@@ -68,7 +69,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function QuotePage({ params }: PageProps) {
-  const quote = await getQuote(params.slug);
+  const { slug } = await params;
+  const quote = await getQuote(slug);
 
   if (!quote) {
     notFound();
@@ -78,7 +80,7 @@ export default async function QuotePage({ params }: PageProps) {
     <div className="py-8">
       <div className="brutal-card p-8 max-w-4xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-4xl mb-6 leading-tight">"{quote.content}"</h1>
+          <h1 className="text-4xl mb-6 leading-tight">&ldquo;{quote.content}&rdquo;</h1>
           <p className="text-2xl mb-4">— {quote.llmSource}</p>
           
           {quote.twitterHandle && (
