@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import SubmitForm from '@/components/SubmitForm';
 
@@ -76,7 +77,7 @@ export default function Header() {
       <header className="relative z-10 nb-nav">
         <nav className="nb-container nb-nav-inner flex justify-between items-center">
           <Link href="/" className="flex items-center gap-3 group">
-            <span className="text-2xl nb-logo tracking-tight">LLM QUOTES</span>
+            <Image src="/logo.svg" alt="Logo" width={180} height={60} />
           </Link>
           <div className="flex items-center gap-3">
             <Link href="/#how-it-works" className="text-sm font-medium transition-colors">
