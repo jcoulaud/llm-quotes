@@ -1,6 +1,9 @@
 import { ImageResponse } from 'next/og';
 import { initializeDatabase } from '@/lib/db';
 import { Quote } from '@/entities/Quote';
+import { readFile } from 'fs/promises';
+
+let brandImageDataUri: string | null = null;
 
 export const runtime = 'nodejs';
 export const size = {
@@ -20,9 +23,18 @@ async function getQuote(slug: string): Promise<Quote | null> {
   }
 }
 
-export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
+export default async function Image({ params }: { params: { slug: string } }) {
+  const { slug } = params;
   const quote = await getQuote(slug);
+
+  // Inline the brand image as a data URI from /public to avoid header/URL issues
+  if (!brandImageDataUri) {
+    const brandImageBuffer = await readFile(
+      process.cwd() + '/public/web-app-manifest-192x192.png'
+    );
+    brandImageDataUri = `data:image/png;base64,${brandImageBuffer.toString('base64')}`;
+  }
+  const brandImageUrl = brandImageDataUri;
 
   if (!quote) {
     return new ImageResponse(
@@ -81,20 +93,15 @@ export default async function Image({ params }: { params: Promise<{ slug: string
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-            <div
-              style={{
-                fontSize: 80,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              💬
-            </div>
+            <img
+              src={brandImageUrl}
+              alt="LLM Quotes logo"
+              style={{ width: 80, height: 80 }}
+            />
             <div
               style={{
                 fontSize: 36,
-                fontWeight: 900,
+                fontWeight: 'bold',
                 textTransform: 'uppercase',
                 letterSpacing: '-2px',
               }}
@@ -112,26 +119,37 @@ export default async function Image({ params }: { params: Promise<{ slug: string
               justifyContent: 'center',
             }}
           >
-            <div
-              style={{
-                fontSize: quote.content.length > 150 ? 36 : 42,
-                fontWeight: 'bold',
-                lineHeight: 1.3,
-                color: '#000',
-              }}
-            >
-              &ldquo;{quote.content}&rdquo;
-            </div>
-            <div
-              style={{
-                fontSize: 32,
-                fontWeight: 'bold',
-                color: '#000',
-                marginTop: '20px',
-              }}
-            >
-              — {quote.llmSource}
-            </div>
+            {(() => {
+              // Build a single text node to satisfy satori's multi-child rule
+              const text = `“${quote.content}”`;
+              return (
+                <div
+                  style={{
+                    fontSize: quote.content.length > 150 ? 36 : 42,
+                    fontWeight: 'bold',
+                    lineHeight: 1.3,
+                    color: '#000',
+                  }}
+                >
+                  {text}
+                </div>
+              );
+            })()}
+            {(() => {
+              const author = `— ${quote.llmSource}`;
+              return (
+                <div
+                  style={{
+                    fontSize: 32,
+                    fontWeight: 'bold',
+                    color: '#000',
+                    marginTop: '20px',
+                  }}
+                >
+                  {author}
+                </div>
+              );
+            })()}
           </div>
 
           <div
@@ -145,7 +163,10 @@ export default async function Image({ params }: { params: Promise<{ slug: string
           >
             <div>@LlmQuotes</div>
             {quote.twitterHandle && (
-              <div>Submitted by @{quote.twitterHandle}</div>
+              (() => {
+                const submitter = `Submitted by @${quote.twitterHandle}`;
+                return <div>{submitter}</div>;
+              })()
             )}
           </div>
         </div>
