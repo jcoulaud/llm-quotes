@@ -1,103 +1,86 @@
-import Image from "next/image";
+import Link from "next/link";
+import SubmitQuoteButton from "@/components/SubmitQuoteButton";
+import { initializeDatabase } from '@/lib/db';
+import { Quote } from '@/entities/Quote';
+import QuoteCard from '@/components/QuoteCard';
 
-export default function Home() {
+async function getRecentQuotes() {
+  try {
+    const dataSource = await initializeDatabase();
+    const quoteRepository = dataSource.getRepository(Quote);
+    
+    const quotes = await quoteRepository.find({
+      where: { status: 'posted' },
+      order: { postedAt: 'DESC' },
+      take: 10,
+    });
+
+    return quotes;
+  } catch (error) {
+    console.error('Error fetching recent quotes:', error);
+    return [];
+  }
+}
+
+export default async function Home() {
+  const recentQuotes = await getRecentQuotes();
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div>
+      <section className="py-20 relative">
+        <div className="decoration decoration-circle absolute top-10 left-10 opacity-20"></div>
+        <div className="decoration decoration-square absolute bottom-8 right-10 opacity-20"></div>
+        <div className="nb-container max-w-3xl">
+          <h1 className="hero-text mb-6">
+            The Internet’s Best LLM Quotes
+            <br />Collected and Posted
+          </h1>
+          <p className="subtitle mb-6 max-w-xl">
+            Real outputs from ChatGPT, Claude, Grok, Gemini, and more. Submit your favorites — the best hit <a className="underline font-semibold" href="https://x.com/LlmQuotes" target="_blank" rel="noopener noreferrer">@LlmQuotes</a>.
+          </p>
+          <div className="flex gap-3 flex-wrap">
+            <SubmitQuoteButton />
+            <Link href="/quotes" className="brutal-button ghost">Browse All</Link>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </section>
+
+      <div className="nb-container">
+      <section id="how-it-works" className="grid md:grid-cols-3 gap-8 py-10">
+        <div className="brutal-card">
+          <div className="card-accent"></div>
+          <span className="badge badge-pending mb-4">Step 1</span>
+          <h3 className="nb-h3 mb-2">Submit</h3>
+          <p className="text-sm opacity-80">Share your favorite AI‑generated quote and pick the LLM source. Add your Twitter handle to be tagged.</p>
+        </div>
+        <div className="brutal-card">
+          <div className="card-accent" style={{ background: 'var(--nb-blue)' }}></div>
+          <span className="badge badge-approved mb-4">Step 2</span>
+          <h3 className="nb-h3 mb-2">Moderate</h3>
+          <p className="text-sm opacity-80">Admins review, approve, or schedule posts.</p>
+        </div>
+        <div className="brutal-card">
+          <div className="card-accent" style={{ background: 'var(--nb-pink)' }}></div>
+          <span className="badge badge-posted mb-4">Step 3</span>
+          <h3 className="nb-h3 mb-2">Post</h3>
+          <p className="text-sm opacity-80">Top quotes are posted to @LlmQuotes with attribution. Every quote gets an SEO page.</p>
+        </div>
+      </section>
+
+      <section className="py-10">
+        {recentQuotes.length === 0 ? (
+          <div className="brutal-card text-center">
+            <p className="text-base">No quotes posted yet.</p>
+          </div>
+        ) : (
+          <div className="grid gap-6">
+            {recentQuotes.slice(0, 5).map((quote) => (
+              <QuoteCard key={quote.id} quote={quote} />
+            ))}
+          </div>
+        )}
+      </section>
+      </div>
     </div>
   );
 }
