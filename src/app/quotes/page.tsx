@@ -11,38 +11,72 @@ export default function QuotesPage() {
   const [filter, setFilter] = useState('all');
   const [total, setTotal] = useState(0);
   const [sourceFilter, setSourceFilter] = useState<string>('all');
+  const [offset, setOffset] = useState(0);
+  const [limit] = useState(50);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(false);
 
-  const fetchQuotes = useCallback(async () => {
-    setLoading(true);
-    try {
-      const params = new URLSearchParams();
-      if (filter !== 'all') {
-        params.append('status', filter);
+  const fetchPage = useCallback(
+    async (pageOffset: number, append: boolean) => {
+      // Distinguish initial load vs load-more for UX
+      if (append) {
+        setLoadingMore(true);
+      } else {
+        setLoading(true);
       }
-      if (sourceFilter !== 'all') {
-        params.append('llmSource', sourceFilter);
+      try {
+        const params = new URLSearchParams();
+        if (filter !== 'all') {
+          params.append('status', filter);
+        }
+        if (sourceFilter !== 'all') {
+          params.append('llmSource', sourceFilter);
+        }
+        params.append('limit', String(limit));
+        params.append('offset', String(pageOffset));
+
+        const response = await fetch(`/api/quotes/list?${params}`);
+        const data = await response.json();
+
+        if (response.ok) {
+          if (append) {
+            setQuotes((prev) => [...prev, ...data.quotes]);
+            setOffset(pageOffset + data.quotes.length);
+          } else {
+            setQuotes(data.quotes);
+            setOffset(data.quotes.length);
+          }
+          setTotal(data.total);
+          const nextHasMore = pageOffset + data.quotes.length < data.total;
+          setHasMore(nextHasMore);
+        }
+      } catch (error) {
+        console.error('Error fetching quotes:', error);
+      } finally {
+        if (append) {
+          setLoadingMore(false);
+        } else {
+          setLoading(false);
+        }
       }
-      params.append('limit', '50');
-      
-      const response = await fetch(`/api/quotes/list?${params}`);
-      const data = await response.json();
-      
-      if (response.ok) {
-        setQuotes(data.quotes);
-        setTotal(data.total);
-      }
-    } catch (error) {
-      console.error('Error fetching quotes:', error);
-    } finally {
-      setLoading(false);
-    }
-  }, [filter, sourceFilter]);
+    },
+    [filter, sourceFilter, limit]
+  );
 
   // No fetch needed: use full known list of LLM sources
 
   useEffect(() => {
-    fetchQuotes();
-  }, [fetchQuotes]);
+    // Reset when filters change and load first page
+    setQuotes([]);
+    setOffset(0);
+    setHasMore(false);
+    fetchPage(0, false);
+  }, [fetchPage]);
+
+  const loadMore = async () => {
+    if (loadingMore || !hasMore) return;
+    await fetchPage(offset, true);
+  };
 
   return (
     <div className="max-w-6xl mx-auto px-8 py-12">
@@ -89,11 +123,25 @@ export default function QuotesPage() {
           <p className="text-lg mb-0">No quotes found</p>
         </div>
       ) : (
-        <div className="grid gap-6 md:grid-cols-2">
-          {quotes.map((quote) => (
-            <QuoteCard key={quote.id} quote={quote} />
-          ))}
-        </div>
+        <>
+          <div className="grid gap-6 md:grid-cols-2">
+            {quotes.map((quote) => (
+              <QuoteCard key={quote.id} quote={quote} />
+            ))}
+          </div>
+          {hasMore && (
+            <div className="mt-8 flex justify-center">
+              <button
+                className="brutal-button"
+                onClick={loadMore}
+                disabled={loadingMore}
+                aria-label="Load more quotes"
+              >
+                {loadingMore ? 'Loading…' : 'Load more'}
+              </button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
