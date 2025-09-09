@@ -1,9 +1,9 @@
 'use client';
 
-import Link from 'next/link';
-import Image from 'next/image';
-import { useEffect, useRef, useState } from 'react';
 import SubmitForm from '@/components/SubmitForm';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useEffect, useRef, useState } from 'react';
 
 export default function Header() {
   const [open, setOpen] = useState(false);
@@ -31,7 +31,7 @@ export default function Header() {
         const root = modalRef.current;
         if (!root) return;
         const focusables = root.querySelectorAll<HTMLElement>(
-          'a[href], button, textarea, input, select, [tabindex]:not([tabindex="-1"])'
+          'a[href], button, textarea, input, select, [tabindex]:not([tabindex="-1"])',
         );
         if (focusables.length > 0) focusables[0].focus();
       }, 0);
@@ -43,8 +43,8 @@ export default function Header() {
         if (!root) return;
         const focusables = Array.from(
           root.querySelectorAll<HTMLElement>(
-            'a[href], button, textarea, input, select, [tabindex]:not([tabindex="-1"])'
-          )
+            'a[href], button, textarea, input, select, [tabindex]:not([tabindex="-1"])',
+          ),
         ).filter((el) => !el.hasAttribute('disabled'));
         if (focusables.length === 0) return;
         const first = focusables[0];
@@ -74,16 +74,16 @@ export default function Header() {
 
   return (
     <>
-      <header className="relative z-10 nb-nav">
-        <nav className="nb-container nb-nav-inner flex justify-between items-center">
-          <Link href="/" className="flex items-center gap-3 group">
-            <Image src="/logo.svg" alt="Logo" width={180} height={60} />
+      <header className='relative z-10 nb-nav'>
+        <nav className='nb-container nb-nav-inner flex justify-between items-center'>
+          <Link href='/' className='flex items-center gap-3 group'>
+            <Image src='/logo.svg' alt='Logo' width={180} height={60} />
           </Link>
-          <div className="flex items-center gap-3">
-            <Link href="/quotes" className="text-sm font-medium transition-colors">
-              QUOTES
+          <div className='flex items-center gap-3'>
+            <Link href='/quotes' className='text-sm font-medium transition-colors'>
+              ALL QUOTES
             </Link>
-            <button onClick={() => setOpen(true)} className="brutal-button text-sm">
+            <button onClick={() => setOpen(true)} className='brutal-button text-sm'>
               SUBMIT QUOTE
             </button>
           </div>
@@ -91,22 +91,24 @@ export default function Header() {
       </header>
 
       {open && (
-        <div className="nb-modal-overlay" onClick={() => setOpen(false)}>
+        <div className='nb-modal-overlay' onClick={() => setOpen(false)}>
           <div
-            className="nb-modal"
-            role="dialog"
-            aria-modal="true"
-            aria-label="Submit a Quote"
+            className='nb-modal'
+            role='dialog'
+            aria-modal='true'
+            aria-label='Submit a Quote'
             ref={modalRef}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="nb-h2">Submit a Quote</h2>
-              <button className="brutal-button ghost" onClick={() => setOpen(false)} aria-label="Close">
+            onClick={(e) => e.stopPropagation()}>
+            <div className='flex justify-between items-center mb-4'>
+              <h2 className='nb-h2'>Submit a Quote</h2>
+              <button
+                className='brutal-button ghost'
+                onClick={() => setOpen(false)}
+                aria-label='Close'>
                 Close
               </button>
             </div>
-            <div className="mt-2">
+            <div className='mt-2'>
               <SubmitForm compact />
             </div>
           </div>

@@ -69,7 +69,7 @@ export default async function Home() {
             </a>
             .
           </p>
-          <div className='flex gap-3 flex-wrap'>
+          <div className='flex flex-wrap gap-x-4 gap-y-4'>
             <SubmitQuoteButton />
             <Link href='/quotes' className='brutal-button ghost'>
               Browse All
