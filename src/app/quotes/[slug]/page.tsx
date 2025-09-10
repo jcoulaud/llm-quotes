@@ -47,7 +47,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     : quote.content;
   const base = new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://llmquotes.com');
   const version = quote.updatedAt ? new Date(quote.updatedAt).getTime() : quote.id;
-  const imageUrl = new URL(`/quotes/${quote.slug}/opengraph-image.png?v=${version}`, base).toString();
+  // Use extensionless OG image path for nested routes to avoid 404s on some Next deployments
+  const imageUrl = new URL(`/quotes/${quote.slug}/opengraph-image?v=${version}`, base).toString();
 
   return {
     title,
