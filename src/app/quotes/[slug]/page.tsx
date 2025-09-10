@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { initializeDatabase } from '@/lib/db';
-import { Quote } from '@/entities/Quote';
+import type { Quote } from '@/entities/Quote';
 import Link from 'next/link';
 import React from 'react';
 
@@ -12,7 +12,7 @@ interface PageProps {
 async function getQuote(slug: string): Promise<Quote | null> {
   try {
     const dataSource = await initializeDatabase();
-    const quoteRepository = dataSource.getRepository(Quote);
+    const quoteRepository = dataSource.getRepository<Quote>('Quote' as any);
     
     const quote = await quoteRepository.findOne({
       where: { slug },

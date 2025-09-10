@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
+export const runtime = 'nodejs';
 import { initializeDatabase } from '@/lib/db';
-import { Quote } from '@/entities/Quote';
+import type { Quote } from '@/entities/Quote';
 import { quoteSubmissionSchema } from '@/lib/validation';
 import { generateSlug } from '@/lib/utils';
 
@@ -19,16 +20,17 @@ export async function POST(request: NextRequest) {
 
     // Initialize database
     const dataSource = await initializeDatabase();
-    const quoteRepository = dataSource.getRepository(Quote);
+    const quoteRepository = dataSource.getRepository('Quote');
 
     // Create new quote
-    const quote = new Quote();
-    quote.content = validation.data.content;
-    quote.llmSource = validation.data.llmSource;
-    quote.twitterHandle = validation.data.twitterHandle?.replace('@', '') || undefined;
-    quote.status = 'pending';
-    quote.slug = generateSlug(validation.data.content);
-    quote.views = 0;
+    const quote = quoteRepository.create({
+      content: validation.data.content,
+      llmSource: validation.data.llmSource,
+      twitterHandle: validation.data.twitterHandle?.replace('@', '') || undefined,
+      status: 'pending',
+      slug: generateSlug(validation.data.content),
+      views: 0,
+    } as Partial<Quote>);
 
     // Save to database
     const savedQuote = await quoteRepository.save(quote);

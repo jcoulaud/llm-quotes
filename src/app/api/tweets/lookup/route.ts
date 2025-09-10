@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+export const runtime = 'nodejs';
 import { getTweetsByIds } from '@/lib/tweetReader';
 
 export async function GET(request: NextRequest) {
@@ -31,4 +32,3 @@ export async function GET(request: NextRequest) {
     );
   }
 }
-

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+export const runtime = 'nodejs';
 import { ADMIN_SESSION_COOKIE } from '@/lib/adminAuth';
 
 export async function POST() {

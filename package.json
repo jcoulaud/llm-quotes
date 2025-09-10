@@ -6,7 +6,9 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "build:migrations": "tsc -p tsconfig.migrations.json",
+    "db:migrate": "pnpm run build:migrations && node dist/scripts/run-migrations.js"
   },
   "dependencies": {
     "@vercel/postgres": "^0.10.0",

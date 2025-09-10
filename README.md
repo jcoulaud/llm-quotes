@@ -62,6 +62,9 @@ NEXTAUTH_URL=http://localhost:3000
 
 # Public site URL (used for metadata and tweet links)
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
+
+# Optional: control runtime migrations (defaults to off)
+RUN_MIGRATIONS_ON_STARTUP=false
 ```
 
 ### 3. Run Development Server
@@ -114,6 +117,62 @@ Quote {
 4. Deploy
 
 The cron job will run hourly to post scheduled quotes.
+
+## Database & Neon Best Practices
+
+- Use your Neon pooled connection string in `DATABASE_URL` (the one ending with `.neon.tech`), and include `sslmode=require`.
+- Avoid `synchronize` in all environments. This project uses migrations only.
+- Keep a small pool size in serverless environments. This project configures `pg` with a small pool and keep-alive.
+- Reuse a single TypeORM `DataSource` across requests via a global cache to reduce cold-connection churn.
+- Prefer running migrations as part of your deploy/CI pipeline instead of during requests.
+
+### Running Migrations
+
+Generate or edit migration files under `src/migrations/`. An initial migration is provided: `1736550000000-CreateQuotesTable.ts`.
+
+Run migrations locally (or in CI):
+
+```bash
+pnpm run db:migrate
+```
+
+This compiles a minimal build for the migration runner and executes it against the DB specified by `DATABASE_URL`.
+
+To run migrations on startup (not generally recommended in serverless), set:
+
+```env
+RUN_MIGRATIONS_ON_STARTUP=true
+```
+
+### Suggested CI step (GitHub Actions)
+
+Run migrations during deploy using a dedicated job with `DATABASE_URL` stored as a secret. Example:
+
+```yaml
+name: DB Migrations
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [ main ]
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run db:migrate
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+```
+
+This avoids running migrations inside request handlers in production and plays well with Neon.
 
 ## Twitter API Setup
 

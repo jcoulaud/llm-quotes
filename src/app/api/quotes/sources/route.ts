@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server';
+export const runtime = 'nodejs';
 import { initializeDatabase } from '@/lib/db';
-import { Quote } from '@/entities/Quote';
+import type { Quote } from '@/entities/Quote';
 
 export async function GET() {
   try {
     const dataSource = await initializeDatabase();
-    const repo = dataSource.getRepository(Quote);
+    const repo = dataSource.getRepository('Quote');
 
     const rows = await repo
       .createQueryBuilder('q')
@@ -26,4 +27,3 @@ export async function GET() {
     );
   }
 }
-

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+export const runtime = 'nodejs';
 import { ADMIN_SESSION_COOKIE, createSessionToken, getClientIp } from '@/lib/adminAuth';
 import { checkLoginLimit, recordLoginAttempt } from '@/lib/loginLimiter';
 

@@ -1,0 +1,19 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "module": "CommonJS",
+    "target": "ES2019",
+    "moduleResolution": "node",
+    "noEmit": false,
+    "declaration": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
+  },
+  "include": [
+    "src/entities/**/*.ts",
+    "src/migrations/**/*.ts",
+    "src/lib/db.ts",
+    "scripts/run-migrations.ts"
+  ]
+}

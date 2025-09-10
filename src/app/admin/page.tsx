@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
-import { Quote } from '@/entities/Quote';
+import type { Quote } from '@/entities/Quote';
 import { formatDate } from '@/lib/utils';
 import { useToast } from '@/components/ToastProvider';
 

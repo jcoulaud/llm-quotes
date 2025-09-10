@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+export const runtime = 'nodejs';
 import { ADMIN_SESSION_COOKIE, verifySessionToken } from '@/lib/adminAuth';
 
 export async function GET(request: NextRequest) {

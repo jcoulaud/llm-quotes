@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+export const runtime = 'nodejs';
 import { ADMIN_SESSION_COOKIE, verifySessionToken } from '@/lib/adminAuth';
 import { getTwitterClient } from '@/lib/twitter';
 
@@ -82,4 +83,3 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Failed to fetch rate limits' }, { status: 500 });
   }
 }
-

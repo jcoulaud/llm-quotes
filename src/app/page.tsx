@@ -1,6 +1,6 @@
 import QuoteCard from '@/components/QuoteCard';
 import SubmitQuoteButton from '@/components/SubmitQuoteButton';
-import { Quote } from '@/entities/Quote';
+import type { Quote } from '@/entities/Quote';
 import { initializeDatabase } from '@/lib/db';
 import type { QuoteDTO } from '@/types/quote';
 import Link from 'next/link';
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
 async function getRecentQuotes(): Promise<QuoteDTO[]> {
   try {
     const dataSource = await initializeDatabase();
-    const quoteRepository = dataSource.getRepository(Quote);
+    const quoteRepository = dataSource.getRepository('Quote');
 
     const quotes = await quoteRepository.find({
       where: { status: 'posted' },
