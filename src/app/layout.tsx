@@ -18,8 +18,8 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        // Absolute URL with cache-busting for reliable scraper fetch
-        url: `${(process.env.NEXT_PUBLIC_SITE_URL || 'https://llmquotes.com').replace(/\/$/, '')}/opengraph-image.png?v=${process.env.VERCEL_GIT_COMMIT_SHA?.slice(0,8) || 'v1'}`,
+        // Use extensionless path to avoid 404s on some deployments
+        url: `${(process.env.NEXT_PUBLIC_SITE_URL || 'https://llmquotes.com').replace(/\/$/, '')}/opengraph-image?v=${process.env.VERCEL_GIT_COMMIT_SHA?.slice(0,8) || 'v1'}`,
         width: 1200,
         height: 630,
         alt: "LLM Quotes",
@@ -32,8 +32,8 @@ export const metadata: Metadata = {
     creator: "@LlmQuotes",
     images: [
       {
-        // Absolute URL with cache-busting to avoid stale Twitter cache
-        url: `${(process.env.NEXT_PUBLIC_SITE_URL || 'https://llmquotes.com').replace(/\/$/, '')}/opengraph-image.png?v=${process.env.VERCEL_GIT_COMMIT_SHA?.slice(0,8) || 'v1'}`,
+        // Use extensionless path to match the route exactly
+        url: `${(process.env.NEXT_PUBLIC_SITE_URL || 'https://llmquotes.com').replace(/\/$/, '')}/opengraph-image?v=${process.env.VERCEL_GIT_COMMIT_SHA?.slice(0,8) || 'v1'}`,
         alt: "LLM Quotes",
       },
     ],
