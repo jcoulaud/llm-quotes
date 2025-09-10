@@ -98,6 +98,23 @@ body {
   box-shadow: calc(var(--nb-shadow) + 2px) calc(var(--nb-shadow) + 2px) 0 0 var(--nb-yellow);
 }
 
+/* Subtle extra hover accent for quote cards */
+.quote-card {
+  overflow: hidden;
+}
+
+/* Fun card animation only for unseen quotes */
+.quote-card--unseen:hover {
+  animation: qcWobble 900ms ease-in-out infinite;
+}
+
+@keyframes qcWobble {
+  0% { transform: translate(-2px, -2px) rotate(-0.6deg); }
+  50% { transform: translate(-4px, -2px) rotate(0.6deg); }
+  100% { transform: translate(-2px, -2px) rotate(-0.6deg); }
+}
+
+
 .card-accent {
   position: absolute;
   width: 64px;
