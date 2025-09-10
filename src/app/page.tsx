@@ -138,7 +138,7 @@ export default async function Home() {
             </div>
           ) : (
             <div className='grid gap-6 md:grid-cols-2'>
-              {recentQuotes.slice(0, 5).map((quote) => (
+              {recentQuotes.slice(0, 10).map((quote) => (
                 <QuoteCard key={quote.id} quote={quote} showStatus={false} />
               ))}
             </div>
