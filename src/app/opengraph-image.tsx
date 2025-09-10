@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og';
 
-// Use Edge runtime for fast, reliable social image generation
-export const runtime = 'edge';
+// Use Node runtime for broader compatibility across crawlers
+export const runtime = 'nodejs';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
