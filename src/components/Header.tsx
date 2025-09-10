@@ -4,9 +4,12 @@ import SubmitForm from '@/components/SubmitForm';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
+import { SignedIn, SignedOut } from '@clerk/nextjs';
+import { UserMenu } from '@/components/UserMenu';
 // using custom CSS bars for burger; no external icon
 
 export default function Header() {
+  const hasClerk = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
   const [open, setOpen] = useState(false); // submit modal
   const [mobileOpen, setMobileOpen] = useState(false); // mobile menu
   const modalRef = useRef<HTMLDivElement | null>(null);
@@ -81,7 +84,7 @@ export default function Header() {
 
   return (
     <>
-      <header className='relative z-10 nb-nav'>
+      <header className='relative z-[100] nb-nav'>
         <nav className='nb-container nb-nav-inner flex justify-between items-center'>
           <Link href='/' className='flex items-center gap-3 group'>
             <Image src='/logo.svg' alt='Logo' width={180} height={60} style={{ height: 'auto' }} />
@@ -91,12 +94,23 @@ export default function Header() {
             <Link href='/quotes' className='text-sm font-medium transition-colors'>
               ALL QUOTES
             </Link>
-            <Link href='/favorites' className='text-sm font-medium transition-colors'>
-              FAVORITES
-            </Link>
+            {/* Favorites moved inside user menu (protected) */}
+            {/* Auth controls */}
+            {hasClerk && (
+              <SignedOut>
+                <Link href='/sign-in' className='text-sm font-medium transition-colors'>
+                  SIGN IN
+                </Link>
+              </SignedOut>
+            )}
             <button onClick={() => setOpen(true)} className='brutal-button text-sm'>
               SUBMIT QUOTE
             </button>
+            {hasClerk && (
+              <SignedIn>
+                <UserMenu />
+              </SignedIn>
+            )}
           </div>
           {/* Mobile burger */}
           <button
@@ -128,12 +142,12 @@ export default function Header() {
       </header>
 
       {/* Mobile menu overlay */}
-      {mobileOpen && (
-        <div
-          className='fixed inset-0 z-50 bg-white nb-border-strong flex flex-col'
-          role='dialog'
-          aria-modal='true'
-          aria-label='Mobile Menu'>
+          {mobileOpen && (
+            <div
+              className='fixed inset-0 z-50 bg-white flex flex-col'
+              role='dialog'
+              aria-modal='true'
+              aria-label='Mobile Menu'>
           {/* Top bar matching site header */}
           <div className='nb-nav'>
             <div className='nb-container nb-nav-inner flex items-center justify-between' style={{ paddingTop: 8, paddingBottom: 10 }}>
@@ -154,26 +168,51 @@ export default function Header() {
               </button>
             </div>
           </div>
-          <div className='nb-container flex-1 py-6'>
-            <div className='flex flex-col gap-4'>
-              <Link
-                href='/'
-                onClick={() => setMobileOpen(false)}
-                className='text-lg font-extrabold tracking-wider'>
-                HOME
-              </Link>
-              <Link
-                href='/quotes'
-                onClick={() => setMobileOpen(false)}
-                className='text-lg font-extrabold tracking-wider'>
-                ALL QUOTES
-              </Link>
-              <Link
-                href='/favorites'
-                onClick={() => setMobileOpen(false)}
-                className='text-lg font-extrabold tracking-wider'>
-                FAVORITES
-              </Link>
+            <div className='nb-container flex-1 py-6'>
+              <div className='flex flex-col gap-4'>
+                <Link
+                  href='/'
+                  onClick={() => setMobileOpen(false)}
+                  className='text-lg font-extrabold tracking-wider'>
+                  HOME
+                </Link>
+                <Link
+                  href='/quotes'
+                  onClick={() => setMobileOpen(false)}
+                  className='text-lg font-extrabold tracking-wider'>
+                  ALL QUOTES
+                </Link>
+                {/* Favorites is part of the account section below */}
+              {/* Mobile auth link (simple) */}
+              {hasClerk && (
+                <>
+                  <SignedOut>
+                    <Link
+                      href='/sign-in'
+                      onClick={() => setMobileOpen(false)}
+                      className='text-lg font-extrabold tracking-wider'
+                    >
+                      SIGN IN
+                    </Link>
+                  </SignedOut>
+                  <SignedIn>
+                    <Link
+                      href='/favorites'
+                      onClick={() => setMobileOpen(false)}
+                      className='text-lg font-extrabold tracking-wider'
+                    >
+                      FAVORITES
+                    </Link>
+                    <Link
+                      href='/user'
+                      onClick={() => setMobileOpen(false)}
+                      className='text-lg font-extrabold tracking-wider'
+                    >
+                      ACCOUNT
+                    </Link>
+                  </SignedIn>
+                </>
+              )}
               <button
                 onClick={() => {
                   setMobileOpen(false);

@@ -3,6 +3,8 @@ import "./globals.css";
 // import Link from "next/link";
 import Header from "@/components/Header";
 import ToastProvider from "@/components/ToastProvider";
+import { ClerkProvider } from "@clerk/nextjs";
+import { clerkAppearance } from "@/lib/clerkAppearance";
 
 export const metadata: Metadata = {
   // Ensures all relative metadata URLs resolve as absolute
@@ -48,36 +50,83 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body suppressHydrationWarning>
-        <div className="grid-overlay"></div>
-        
-        <ToastProvider>
-          <Header />
-          
-          <main className="relative z-10 min-h-screen">
-            {children}
-          </main>
-          
-          <footer className="relative z-10 nb-footer mt-20">
-            <div className="nb-container py-3">
-              <div className="flex justify-between items-center">
-                <div className="text-sm">
-                  Made by {""}
-                  <a href="https://x.com/JulienCoulaud" target="_blank" rel="noopener noreferrer" className="underline font-semibold">J</a>
+        {process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY ? (
+          <ClerkProvider signInUrl="/sign-in" signUpUrl="/sign-up" appearance={clerkAppearance}>
+            <div className="grid-overlay"></div>
+
+            <ToastProvider>
+              <Header />
+
+              <main className="relative z-10 min-h-screen">{children}</main>
+
+              <footer className="relative z-10 nb-footer mt-20">
+                <div className="nb-container py-3">
+                  <div className="flex justify-between items-center">
+                    <div className="text-sm">
+                      Made by {""}
+                      <a
+                        href="https://x.com/JulienCoulaud"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="underline font-semibold"
+                      >
+                        J
+                      </a>
+                    </div>
+                    <div className="flex gap-6">
+                      <a
+                        href="https://x.com/LlmQuotes"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm font-medium transition-colors"
+                      >
+                        X
+                      </a>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex gap-6">
-                  <a
-                    href="https://x.com/LlmQuotes"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm font-medium transition-colors"
-                  >
-                    X
-                  </a>
+              </footer>
+            </ToastProvider>
+          </ClerkProvider>
+        ) : (
+          <>
+            <div className="grid-overlay"></div>
+
+            <ToastProvider>
+              <Header />
+
+              <main className="relative z-10 min-h-screen">{children}</main>
+
+              <footer className="relative z-10 nb-footer mt-20">
+                <div className="nb-container py-3">
+                  <div className="flex justify-between items-center">
+                    <div className="text-sm">
+                      Made by {""}
+                      <a
+                        href="https://x.com/JulienCoulaud"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="underline font-semibold"
+                      >
+                        J
+                      </a>
+                    </div>
+                    <div className="flex gap-6">
+                      <a
+                        href="https://x.com/LlmQuotes"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm font-medium transition-colors"
+                      >
+                        X
+                      </a>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-          </footer>
-        </ToastProvider>
+              </footer>
+            </ToastProvider>
+          </>
+        )}
       </body>
     </html>
   );

@@ -466,11 +466,93 @@ body {
   text-decoration-thickness: 3px;
   text-underline-offset: 4px;
 }
+/* Ensure pointer cursor on all header items */
+.nb-nav a,
+.nb-nav button {
+  cursor: pointer;
+}
 /* keep header button visually contained */
 .nb-nav .brutal-button {
   font-size: 13px;
   padding: 7px 15px;
   box-shadow: 4px 4px 0 0 var(--nb-yellow);
+}
+
+/* Override nav button hover to match regular brutal buttons */
+.nb-nav .brutal-button:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 0 var(--nb-yellow);
+}
+
+.nb-nav .brutal-button:active {
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0 0 var(--nb-yellow);
+}
+
+/* Simple brutal dropdown */
+.nb-dropdown {
+  position: absolute;
+  right: 0;
+  margin-top: 8px;
+  min-width: 240px;
+  background: var(--nb-white);
+  border: var(--nb-border) solid var(--nb-ink);
+  border-radius: var(--nb-radius);
+  box-shadow: 6px 6px 0 0 var(--nb-yellow);
+  overflow: hidden;
+  z-index: 1000;
+}
+.nb-dropdown-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-bottom: var(--nb-border) solid var(--nb-ink);
+}
+.nb-dropdown-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 12px 14px;
+  background: var(--nb-white);
+  border-bottom: var(--nb-border) solid var(--nb-ink);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-decoration: none !important;
+  cursor: pointer;
+}
+.nb-dropdown-item:last-child {
+  border-bottom: 0;
+}
+.nb-dropdown-item:hover,
+.nb-dropdown-item:focus {
+  background: var(--nb-yellow);
+  text-decoration: none !important;
+  text-decoration-thickness: initial !important;
+  text-underline-offset: initial !important;
+}
+
+/* Avatar button (no double border) */
+.nb-avatar-btn {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  border-radius: 999px;
+  cursor: pointer;
+}
+/* Avatar hover animation to match brutal buttons */
+.nb-avatar-btn img {
+  transition: transform 80ms ease, box-shadow 80ms ease;
+}
+.nb-avatar-btn:hover img {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 0 var(--nb-yellow);
+}
+.nb-avatar-btn:active img {
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0 0 var(--nb-yellow);
 }
 
 .nb-footer {
@@ -493,6 +575,9 @@ body {
 }
 .nb-shadow-yellow {
   box-shadow: var(--nb-shadow) var(--nb-shadow) 0 0 var(--nb-yellow);
+}
+.nb-shadow-yellow-sm {
+  box-shadow: 4px 4px 0 0 var(--nb-yellow);
 }
 .nb-shadow-blue {
   box-shadow: var(--nb-shadow) var(--nb-shadow) 0 0 var(--nb-blue);
