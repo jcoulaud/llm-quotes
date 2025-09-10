@@ -29,7 +29,7 @@ export const metadata: Metadata = {
 async function getRecentQuotes(): Promise<QuoteDTO[]> {
   try {
     const dataSource = await initializeDatabase();
-    const quoteRepository = dataSource.getRepository<Quote>('Quote');
+    const quoteRepository = dataSource.getRepository<Quote>('quotes');
 
     const quotes = await quoteRepository.find({
       where: { status: 'posted' },

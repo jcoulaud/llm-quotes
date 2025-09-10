@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
 
     // Initialize database
     const dataSource = await initializeDatabase();
-    const quoteRepository = dataSource.getRepository<Quote>('Quote');
+    const quoteRepository = dataSource.getRepository<Quote>('quotes');
 
     // Build query
     const queryBuilder = quoteRepository.createQueryBuilder('quote');

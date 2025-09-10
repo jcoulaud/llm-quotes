@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
     }
 
     const dataSource = await initializeDatabase();
-    const repo = dataSource.getRepository<Quote>('Quote');
+    const repo = dataSource.getRepository<Quote>('quotes');
 
     // Aggregate counts per status
     const raw = await repo

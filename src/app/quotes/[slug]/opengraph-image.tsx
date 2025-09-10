@@ -15,7 +15,7 @@ export const contentType = 'image/png';
 async function getQuote(slug: string): Promise<Quote | null> {
   try {
     const dataSource = await initializeDatabase();
-    const quoteRepository = dataSource.getRepository<Quote>('Quote');
+    const quoteRepository = dataSource.getRepository<Quote>('quotes');
     return await quoteRepository.findOne({ where: { slug } });
   } catch (error) {
     console.error('Error fetching quote for OG image:', error);

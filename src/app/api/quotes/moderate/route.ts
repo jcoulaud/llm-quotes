@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
 
     // Initialize database
     const dataSource = await initializeDatabase();
-    const quoteRepository = dataSource.getRepository<Quote>('Quote');
+    const quoteRepository = dataSource.getRepository<Quote>('quotes');
 
     // Find quote
     const quote = await quoteRepository.findOne({

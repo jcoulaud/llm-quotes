@@ -28,7 +28,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   try {
   const ds = await initializeDatabase();
-  const repo = ds.getRepository<Quote>('Quote');
+  const repo = ds.getRepository<Quote>('quotes');
     const quotes = await repo.find({ where: { status: 'posted' }, order: { postedAt: 'DESC' } });
 
     const dynamicEntries: MetadataRoute.Sitemap = quotes.map((q) => ({

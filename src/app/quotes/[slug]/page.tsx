@@ -12,7 +12,7 @@ interface PageProps {
 async function getQuote(slug: string): Promise<Quote | null> {
   try {
     const dataSource = await initializeDatabase();
-    const quoteRepository = dataSource.getRepository<Quote>('Quote');
+    const quoteRepository = dataSource.getRepository<Quote>('quotes');
     
     const quote = await quoteRepository.findOne({
       where: { slug },
