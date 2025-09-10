@@ -19,6 +19,12 @@ export const metadata: Metadata = {
       'Discover and share the funniest, strangest, and most surprising LLM replies from ChatGPT, Claude, Grok, Gemini, and more.',
     type: 'website',
     url: '/',
+    images: [
+      {
+        url: `/og-home.png?v=${process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 8) || 'v1'}`,
+        alt: 'LLM Quotes',
+      },
+    ],
   },
   robots: {
     index: true,
