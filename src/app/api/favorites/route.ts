@@ -1,11 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 export const runtime = 'nodejs';
 import { initializeDatabase } from '@/lib/db';
 import type { Quote } from '@/entities/Quote';
-import type { Favorite } from '@/entities/Favorite';
 import { auth } from '@clerk/nextjs/server';
 
-export async function GET(_request: NextRequest) {
+export async function GET() {
   try {
     const { userId } = await auth();
     if (!userId) return NextResponse.json({ quotes: [] });
@@ -21,7 +20,7 @@ export async function GET(_request: NextRequest) {
       .getMany();
 
     return NextResponse.json({ quotes });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Error listing favorites:', error);
     return NextResponse.json({ error: 'Failed to list favorites' }, { status: 500 });
   }

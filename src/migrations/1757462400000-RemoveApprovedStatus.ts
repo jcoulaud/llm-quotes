@@ -12,7 +12,7 @@ export class RemoveApprovedStatus1757462400000 implements MigrationInterface {
     `);
   }
 
-  public async down(queryRunner: QueryRunner): Promise<void> {
+  public async down(_queryRunner: QueryRunner): Promise<void> {
     // No safe automatic rollback for this semantic change
     // Intentionally left empty
   }

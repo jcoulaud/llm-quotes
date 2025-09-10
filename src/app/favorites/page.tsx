@@ -14,7 +14,7 @@ export default function FavoritesPage() {
       const res = await fetch('/api/favorites');
       if (!res.ok) throw new Error('Failed');
       const data = await res.json();
-      const results: QuoteDTO[] = (data?.quotes || []).map((q: any) => ({
+      const results: QuoteDTO[] = (data?.quotes || []).map((q: QuoteDTO) => ({
         id: q.id,
         content: q.content,
         llmSource: q.llmSource,

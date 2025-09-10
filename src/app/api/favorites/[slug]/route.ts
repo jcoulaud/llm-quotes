@@ -27,9 +27,9 @@ export async function GET(
     const quote = await quoteRepo.findOne({ where: { slug } });
     if (!quote) return NextResponse.json({ favorited: false }, { status: 200 });
 
-    const existing = await favoriteRepo.findOne({ where: { userId, quoteId: quote.id } as any });
+    const existing = await favoriteRepo.findOne({ where: { userId, quoteId: quote.id } });
     return NextResponse.json({ favorited: Boolean(existing) });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Error checking favorite:', error);
     return NextResponse.json({ error: 'Failed to check favorite' }, { status: 500 });
   }
@@ -52,12 +52,12 @@ export async function POST(
     const quote = await quoteRepo.findOne({ where: { slug } });
     if (!quote) return NextResponse.json({ error: 'Quote not found' }, { status: 404 });
 
-    const existing = await favoriteRepo.findOne({ where: { userId, quoteId: quote.id } as any });
+    const existing = await favoriteRepo.findOne({ where: { userId, quoteId: quote.id } });
     if (!existing) {
-      await favoriteRepo.insert({ userId, quoteId: quote.id } as any);
+      await favoriteRepo.insert({ userId, quoteId: quote.id });
     }
     return NextResponse.json({ favorited: true });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Error adding favorite:', error);
     // Handle unique constraint race: still return favorited true
     return NextResponse.json({ favorited: true });
@@ -81,11 +81,10 @@ export async function DELETE(
     const quote = await quoteRepo.findOne({ where: { slug } });
     if (!quote) return NextResponse.json({ error: 'Quote not found' }, { status: 404 });
 
-    await favoriteRepo.delete({ userId, quoteId: quote.id } as any);
+    await favoriteRepo.delete({ userId, quoteId: quote.id });
     return NextResponse.json({ favorited: false });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Error removing favorite:', error);
     return NextResponse.json({ error: 'Failed to remove favorite' }, { status: 500 });
   }
 }
-

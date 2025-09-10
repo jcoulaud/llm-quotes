@@ -1,10 +1,9 @@
 'use client';
 import { useSignIn } from '@clerk/nextjs';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useCallback, useMemo } from 'react';
 
 export default function Page() {
-  const router = useRouter();
   const search = useSearchParams();
   const { isLoaded, signIn } = useSignIn();
 

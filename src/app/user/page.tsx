@@ -1,6 +1,8 @@
 'use client';
 import { RedirectToSignIn, SignedIn, SignedOut, SignOutButton, useUser } from '@clerk/nextjs';
 import { useEffect, useMemo, useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
 
 export default function Page() {
   return (
@@ -15,23 +17,45 @@ export default function Page() {
   );
 }
 
+type MinimalExternalAccount = {
+  provider?: string | null;
+  username?: string | null;
+  handle?: string | null;
+  identifier?: string | null;
+};
+
+function asMinimalAccounts(value: unknown): MinimalExternalAccount[] {
+  if (!Array.isArray(value)) return [];
+  return value
+    .filter((v): v is Record<string, unknown> => typeof v === 'object' && v !== null)
+    .map((v) => ({
+      provider: typeof v.provider === 'string' ? v.provider : null,
+      username: typeof v.username === 'string' ? v.username : null,
+      handle: typeof v.handle === 'string' ? v.handle : null,
+      identifier: typeof v.identifier === 'string' ? v.identifier : null,
+    }));
+}
+
 function AccountInner() {
   const { user } = useUser();
   const display = user?.fullName || user?.username || 'User';
 
-  const [externalAccounts, setExternalAccounts] = useState<any[] | null>(null);
+  const [externalAccounts, setExternalAccounts] = useState<MinimalExternalAccount[] | null>(null);
 
   useEffect(() => {
     let cancelled = false;
     async function load() {
       if (!user) return;
       try {
-        // Prefer method if available to ensure fresh data
-        const method = (user as any).getExternalAccounts;
-        const list = method ? await method.call(user) : (user as any).externalAccounts || [];
-        if (!cancelled) setExternalAccounts(list);
+        const maybeUser = user as unknown as {
+          getExternalAccounts?: () => Promise<unknown>;
+          externalAccounts?: unknown;
+        };
+        const method = maybeUser.getExternalAccounts;
+        const listUnknown = method ? await method.call(user) : maybeUser.externalAccounts;
+        if (!cancelled) setExternalAccounts(asMinimalAccounts(listUnknown));
       } catch {
-        if (!cancelled) setExternalAccounts((user as any).externalAccounts || []);
+        if (!cancelled) setExternalAccounts([]);
       }
     }
     load();
@@ -42,8 +66,8 @@ function AccountInner() {
 
   const xAccount = useMemo(() => {
     const arr = externalAccounts || [];
-    return arr.find((a: any) => {
-      const p = (a?.provider || '').toLowerCase();
+    return arr.find((a) => {
+      const p = (a?.provider || '')?.toLowerCase?.() || '';
       return p.includes('twitter') || p.includes('oauth_x') || p.includes('x');
     });
   }, [externalAccounts]);
@@ -61,7 +85,7 @@ function AccountInner() {
         <div className='md:col-span-1'>
           <div className='flex items-center gap-4'>
             {user?.imageUrl && (
-              <img
+              <Image
                 alt='Avatar'
                 src={user.imageUrl}
                 width={72}
@@ -112,9 +136,9 @@ function AccountInner() {
 
           <div className='mt-6 text-sm opacity-70'>
             Need advanced settings? Use Clerk’s default profile at{' '}
-            <a href='/user/manage' className='underline font-semibold'>
+            <Link href='/user/manage' className='underline font-semibold'>
               /user/manage
-            </a>
+            </Link>
             .
           </div>
         </div>

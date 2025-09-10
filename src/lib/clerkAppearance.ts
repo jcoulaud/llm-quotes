@@ -1,6 +1,7 @@
 // Neo‑Brutalist theme to match site styles
-// Typed as any to avoid depending on @clerk/types being installed explicitly
-export const clerkAppearance: any = {
+import type { Appearance } from '@clerk/types';
+
+export const clerkAppearance: Appearance = {
   variables: {
     colorPrimary: 'var(--nb-purple)',
     colorText: 'var(--nb-ink)',

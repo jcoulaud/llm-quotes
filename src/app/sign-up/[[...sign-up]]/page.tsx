@@ -1,10 +1,9 @@
 'use client';
 import { useSignIn } from '@clerk/nextjs';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useCallback, useMemo } from 'react';
 
 export default function Page() {
-  const router = useRouter();
   const search = useSearchParams();
   const { isLoaded, signIn } = useSignIn();
 
@@ -54,7 +53,7 @@ export default function Page() {
         </div>
 
         <div className='mt-6 text-sm'>
-          Already have an account? You'll be signed in after authenticating with X.
+          Already have an account? You&apos;ll be signed in after authenticating with X.
         </div>
       </div>
     </div>

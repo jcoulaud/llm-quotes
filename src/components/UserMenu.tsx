@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useUser, SignOutButton } from "@clerk/nextjs";
 import Link from "next/link";
+import Image from "next/image";
 
 export function UserMenu() {
   const { user } = useUser();
@@ -36,7 +37,7 @@ export function UserMenu() {
         aria-expanded={open}
       >
         {avatar ? (
-          <img
+          <Image
             src={avatar}
             alt="Avatar"
             width={36}
@@ -51,7 +52,7 @@ export function UserMenu() {
         <div className="nb-dropdown" role="menu" aria-label="User menu">
           <div className="nb-dropdown-header">
             {avatar && (
-              <img
+              <Image
                 src={avatar}
                 alt="Avatar"
                 width={44}
