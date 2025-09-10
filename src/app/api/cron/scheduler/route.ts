@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 export const runtime = 'nodejs';
 import { initializeDatabase } from '@/lib/db';
-import { Quote } from '@/entities/Quote';
+import type { Quote } from '@/entities/Quote';
 import { postTweet } from '@/lib/twitter';
 import { LessThanOrEqual } from 'typeorm';
 
@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
 
     // Initialize database
     const dataSource = await initializeDatabase();
-    const quoteRepository = dataSource.getRepository(Quote);
+    const quoteRepository = dataSource.getRepository<Quote>('Quote');
 
     // Find scheduled quotes that are due
     const now = new Date();

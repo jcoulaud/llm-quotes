@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 export const runtime = 'nodejs';
 import { initializeDatabase } from '@/lib/db';
-import { Quote } from '@/entities/Quote';
+import type { Quote } from '@/entities/Quote';
 
 export async function GET(
   request: NextRequest,
@@ -12,7 +12,7 @@ export async function GET(
 
     // Initialize database
     const dataSource = await initializeDatabase();
-    const quoteRepository = dataSource.getRepository(Quote);
+    const quoteRepository = dataSource.getRepository<Quote>('Quote');
 
     // Find quote by slug
     const quote = await quoteRepository.findOne({

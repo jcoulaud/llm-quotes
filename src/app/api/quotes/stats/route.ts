@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 export const runtime = 'nodejs';
 import { initializeDatabase } from '@/lib/db';
-import { Quote } from '@/entities/Quote';
+import type { Quote } from '@/entities/Quote';
 import { ADMIN_SESSION_COOKIE, verifySessionToken } from '@/lib/adminAuth';
 
 export async function GET(request: NextRequest) {
@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
     }
 
     const dataSource = await initializeDatabase();
-    const repo = dataSource.getRepository(Quote);
+    const repo = dataSource.getRepository<Quote>('Quote');
 
     // Aggregate counts per status
     const raw = await repo
