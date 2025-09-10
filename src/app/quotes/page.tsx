@@ -124,7 +124,7 @@ export default function QuotesPage() {
         <>
           <div className="grid gap-6 md:grid-cols-2">
             {quotes.map((quote) => (
-              <QuoteCard key={quote.id} quote={quote} />
+              <QuoteCard key={quote.id} quote={quote} showStatus={filter === 'all'} />
             ))}
           </div>
           {hasMore && (

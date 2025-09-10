@@ -83,7 +83,7 @@ export default function QuoteCard({ quote, showStatus = true, seenVersion = 0 }:
       
       <div className="flex justify-between items-center gap-4 pt-4 mt-2 flex-nowrap">
         <div className="flex items-center gap-3">
-          {showStatus && quote.status !== 'posted' && (
+          {showStatus && (
             <span className={`badge ${getStatusColor(quote.status)}`}>
               {quote.status}
             </span>
