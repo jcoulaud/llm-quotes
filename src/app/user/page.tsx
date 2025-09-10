@@ -8,6 +8,26 @@ import Link from 'next/link';
 export const dynamic = 'force-dynamic';
 
 export default function Page() {
+  const hasClerk = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
+
+  if (!hasClerk) {
+    return (
+      <div className='nb-container py-12'>
+        <div className='brutal-card max-w-2xl'>
+          <h1 className='nb-h2'>Account</h1>
+          <p className='subtitle mt-1'>Authentication is not configured.</p>
+          <p className='mt-3 text-sm opacity-80'>
+            This deployment does not have Clerk configured. Please set
+            <code className='mx-1'>NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY</code> and related env vars to enable account pages.
+          </p>
+          <div className='mt-4'>
+            <Link href='/' className='brutal-button'>Go back home</Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className='nb-container py-12'>
       <SignedOut>
