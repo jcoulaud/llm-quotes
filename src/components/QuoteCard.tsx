@@ -1,7 +1,7 @@
 "use client";
 
 import Link from 'next/link';
-import { formatDate, getStatusColor } from '@/lib/utils';
+import { formatDateOnly, getStatusColor } from '@/lib/utils';
 import type { QuoteDTO } from '@/types/quote';
 import { isSeen, markSeen } from '@/lib/read-tracker';
 import { useEffect, useRef, useState } from 'react';
@@ -81,7 +81,7 @@ export default function QuoteCard({ quote, showStatus = true, seenVersion = 0 }:
         <p className="font-medium">— {quote.llmSource}</p>
       </div>
       
-      <div className="flex justify-between items-center flex-wrap gap-4 pt-4 mt-2">
+      <div className="flex justify-between items-center gap-4 pt-4 mt-2 flex-nowrap">
         <div className="flex items-center gap-3">
           {showStatus && quote.status !== 'posted' && (
             <span className={`badge ${getStatusColor(quote.status)}`}>
@@ -103,16 +103,14 @@ export default function QuoteCard({ quote, showStatus = true, seenVersion = 0 }:
         </div>
         
         <div className="flex items-center gap-4">
-          <span className="text-sm opacity-60">{formatDate(quote.createdAt)}</span>
-          {quote.status === 'posted' && (
-            <Link
-              href={`/quotes/${quote.slug}`}
-              className="badge badge-posted"
-              onClick={handleMarkSeen}
-            >
-              VIEW →
-            </Link>
-          )}
+          <span className="text-sm opacity-60">{formatDateOnly(quote.createdAt)}</span>
+          <Link
+            href={`/quotes/${quote.slug}`}
+            className="badge badge-posted"
+            onClick={handleMarkSeen}
+          >
+            VIEW →
+          </Link>
         </div>
       </div>
     </div>

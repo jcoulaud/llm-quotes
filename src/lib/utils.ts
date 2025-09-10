@@ -18,6 +18,14 @@ export function formatDate(date: Date | string): string {
   }).format(new Date(date));
 }
 
+export function formatDateOnly(date: Date | string): string {
+  return new Intl.DateTimeFormat('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  }).format(new Date(date));
+}
+
 export function getStatusColor(status: string): string {
   const colors: Record<string, string> = {
     pending: 'badge-pending',
