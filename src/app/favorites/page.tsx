@@ -7,7 +7,7 @@ import QuoteCard from '@/components/QuoteCard';
 export default function FavoritesPage() {
   const [quotes, setQuotes] = useState<QuoteDTO[]>([]);
   const [loading, setLoading] = useState(true);
-  const [removingIds, setRemovingIds] = useState<Set<string>>(new Set());
+  const [removingIds, setRemovingIds] = useState<Set<number>>(new Set());
 
   async function load() {
     try {
@@ -38,7 +38,7 @@ export default function FavoritesPage() {
     load();
   }, []);
 
-  const handleUnfavorite = (quoteId: string) => {
+  const handleUnfavorite = (quoteId: number) => {
     setRemovingIds(prev => new Set(prev).add(quoteId));
     
     setTimeout(() => {

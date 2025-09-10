@@ -12,7 +12,8 @@ export class RemoveApprovedStatus1757462400000 implements MigrationInterface {
     `);
   }
 
-  public async down(_queryRunner: QueryRunner): Promise<void> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public async down(_: QueryRunner): Promise<void> {
     // No safe automatic rollback for this semantic change
     // Intentionally left empty
   }

@@ -104,8 +104,8 @@ export default async function Home() {
       <div className='nb-container'>
         <section id='how-it-works' className='grid md:grid-cols-3 gap-8 py-10'>
           <div className='brutal-card'>
-            <div className='card-accent'></div>
-            <span className='badge badge-pending mb-4'>Step 1</span>
+            <div className='card-accent' style={{ background: 'var(--nb-purple)' }}></div>
+            <span className='badge mb-4' style={{ background: 'var(--nb-purple)', color: 'white' }}>Step 1</span>
             <h3 className='nb-h3 mb-2'>Submit</h3>
             <p className='text-sm opacity-80'>
               Share your favorite quote and pick the LLM source. Add your Twitter handle to be
@@ -121,8 +121,8 @@ export default async function Home() {
             </p>
           </div>
           <div className='brutal-card'>
-            <div className='card-accent' style={{ background: 'var(--nb-pink)' }}></div>
-            <span className='badge badge-scheduled mb-4'>Step 3</span>
+            <div className='card-accent' style={{ background: 'var(--nb-green)' }}></div>
+            <span className='badge mb-4' style={{ background: 'var(--nb-green)' }}>Step 3</span>
             <h3 className='nb-h3 mb-2'>Post</h3>
             <p className='text-sm opacity-80'>
               Top quotes are posted to @LlmQuotes with attribution. Every quote gets an SEO page.

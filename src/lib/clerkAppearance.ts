@@ -10,7 +10,6 @@ export const clerkAppearance: Appearance = {
     colorInputText: 'var(--nb-ink)',
     colorDanger: 'var(--nb-red)',
     borderRadius: '18px',
-    borderRadiusButton: '999px',
     fontFamily: 'var(--font-sans)',
   },
   elements: {
