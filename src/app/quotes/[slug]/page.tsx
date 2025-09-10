@@ -45,6 +45,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const description = quote.content.length > 160 
     ? quote.content.substring(0, 157) + '...' 
     : quote.content;
+  const base = new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://llmquotes.com');
+  const version = quote.updatedAt ? new Date(quote.updatedAt).getTime() : quote.id;
+  const imageUrl = new URL(`/quotes/${quote.slug}/opengraph-image.png?v=${version}`, base).toString();
 
   return {
     title,
@@ -61,8 +64,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       url: `/quotes/${slug}`,
       images: [
         {
-          // Add .png extension for improved compatibility with Twitter's crawler
-          url: `/quotes/${quote.slug}/opengraph-image.png`,
+          // Absolute URL with cache-busting for crawler refresh
+          url: imageUrl,
+          width: 1200,
+          height: 630,
           alt: `Quote from ${quote.llmSource}`,
         },
       ],
@@ -75,8 +80,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description,
       images: [
         {
-          // Add .png extension for improved compatibility with Twitter's crawler
-          url: `/quotes/${quote.slug}/opengraph-image.png`,
+          // Absolute URL with cache-busting for crawler refresh
+          url: imageUrl,
           alt: `Quote from ${quote.llmSource}`,
         },
       ],
