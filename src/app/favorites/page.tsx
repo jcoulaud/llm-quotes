@@ -7,6 +7,7 @@ import QuoteCard from '@/components/QuoteCard';
 export default function FavoritesPage() {
   const [quotes, setQuotes] = useState<QuoteDTO[]>([]);
   const [loading, setLoading] = useState(true);
+  const [removingIds, setRemovingIds] = useState<Set<string>>(new Set());
 
   async function load() {
     try {
@@ -37,6 +38,19 @@ export default function FavoritesPage() {
     load();
   }, []);
 
+  const handleUnfavorite = (quoteId: string) => {
+    setRemovingIds(prev => new Set(prev).add(quoteId));
+    
+    setTimeout(() => {
+      setQuotes(prev => prev.filter(q => q.id !== quoteId));
+      setRemovingIds(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(quoteId);
+        return newSet;
+      });
+    }, 1000);
+  };
+
   return (
     <div className="nb-container py-8">
       <div className="flex items-center justify-between mb-6">
@@ -53,7 +67,18 @@ export default function FavoritesPage() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {quotes.map((q) => (
-            <QuoteCard key={q.id} quote={q} showStatus={q.status !== 'posted'} />
+            <div
+              key={q.id}
+              className={`transition-all duration-500 ${
+                removingIds.has(q.id) ? 'opacity-0 scale-95' : 'opacity-100 scale-100'
+              }`}
+            >
+              <QuoteCard 
+                quote={q} 
+                showStatus={q.status !== 'posted'} 
+                onUnfavorite={() => handleUnfavorite(q.id)}
+              />
+            </div>
           ))}
         </div>
       )}

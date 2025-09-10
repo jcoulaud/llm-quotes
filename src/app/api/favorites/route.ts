@@ -7,7 +7,7 @@ import { auth } from '@clerk/nextjs/server';
 
 export async function GET(_request: NextRequest) {
   try {
-    const { userId } = auth();
+    const { userId } = await auth();
     if (!userId) return NextResponse.json({ quotes: [] });
 
     const dataSource = await initializeDatabase();

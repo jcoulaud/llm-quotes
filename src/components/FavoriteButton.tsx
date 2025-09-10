@@ -9,11 +9,13 @@ export default function FavoriteButton({
   size = 18,
   className = '',
   style,
+  onUnfavorite,
 }: {
   slug: string;
   size?: number;
   className?: string;
   style?: CSSProperties;
+  onUnfavorite?: () => void;
 }) {
   const [fav, setFav] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -60,6 +62,10 @@ export default function FavoriteButton({
         if (!res.ok) return;
         const data = await res.json();
         setFav(Boolean(data?.favorited));
+        
+        if (method === 'DELETE' && onUnfavorite) {
+          onUnfavorite();
+        }
       } catch {
         // swallow
       } finally {

@@ -8,15 +8,16 @@ import Link from 'next/link';
 interface QuoteCardProps {
   quote: QuoteDTO;
   showStatus?: boolean;
+  onUnfavorite?: () => void;
 }
 
-export default function QuoteCard({ quote, showStatus = true }: QuoteCardProps) {
+export default function QuoteCard({ quote, showStatus = true, onUnfavorite }: QuoteCardProps) {
   const cardClass = 'brutal-card mb-4 quote-card';
 
   return (
     <div className={cardClass}>
       {/* Favorite star in top-right */}
-      <FavoriteButton slug={quote.slug} size={18} className='absolute top-2 right-2' />
+      <FavoriteButton slug={quote.slug} size={18} className='absolute top-2 right-2' onUnfavorite={onUnfavorite} />
       <div className='mb-4'>
         <p className='text-base mb-3 leading-relaxed quote-text'>&ldquo;{quote.content}&rdquo;</p>
         <p className='font-medium'>— {quote.llmSource}</p>

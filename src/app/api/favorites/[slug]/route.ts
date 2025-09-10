@@ -6,7 +6,7 @@ import type { Favorite } from '@/entities/Favorite';
 import { auth } from '@clerk/nextjs/server';
 
 async function getUserId() {
-  const { userId } = auth();
+  const { userId } = await auth();
   return userId;
 }
 
