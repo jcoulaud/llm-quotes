@@ -1,64 +1,22 @@
 'use client';
 
 import FavoriteButton from '@/components/FavoriteButton';
-import { isSeen, markSeen } from '@/lib/read-tracker';
 import { formatDateOnly, getStatusColor } from '@/lib/utils';
 import type { QuoteDTO } from '@/types/quote';
 import Link from 'next/link';
-import { useEffect, useRef, useState } from 'react';
 
 interface QuoteCardProps {
   quote: QuoteDTO;
   showStatus?: boolean;
-  seenVersion?: number; // external trigger to re-check seen state
 }
 
-export default function QuoteCard({ quote, showStatus = true, seenVersion = 0 }: QuoteCardProps) {
-  const [seen, setSeen] = useState(false);
-  const hoverTimerRef = useRef<number | null>(null);
-
-  useEffect(() => {
-    setSeen(isSeen(quote.slug));
-  }, [quote.slug, seenVersion]);
-
-  useEffect(() => {
-    return () => {
-      if (hoverTimerRef.current) {
-        window.clearTimeout(hoverTimerRef.current);
-        hoverTimerRef.current = null;
-      }
-    };
-  }, []);
-
-  // Removed viewport and click-based marking: only detail page marks seen.
-
-  const handleMouseEnter = () => {
-    if (seen || hoverTimerRef.current) return;
-    // After 3s hover, mark as seen
-    hoverTimerRef.current = window.setTimeout(() => {
-      markSeen(quote.slug);
-      setSeen(true);
-      hoverTimerRef.current = null;
-    }, 3000);
-  };
-
-  const handleMouseLeave = () => {
-    if (hoverTimerRef.current) {
-      window.clearTimeout(hoverTimerRef.current);
-      hoverTimerRef.current = null;
-    }
-  };
-
-  const cardClass = `brutal-card mb-4 quote-card ${
-    seen ? 'quote-card--seen' : 'quote-card--unseen'
-  }`;
+export default function QuoteCard({ quote, showStatus = true }: QuoteCardProps) {
+  const cardClass = 'brutal-card mb-4 quote-card';
 
   return (
-    <div className={cardClass} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+    <div className={cardClass}>
       {/* Favorite star in top-right */}
       <FavoriteButton slug={quote.slug} size={18} className='absolute top-2 right-2' />
-      {/* Unseen indicator (small dot), shown only if not seen */}
-      {!seen && <span className='unseen-dot' aria-label='Unseen quote' />}
       <div className='mb-4'>
         <p className='text-base mb-3 leading-relaxed quote-text'>&ldquo;{quote.content}&rdquo;</p>
         <p className='font-medium'>— {quote.llmSource}</p>
