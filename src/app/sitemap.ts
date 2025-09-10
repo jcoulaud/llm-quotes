@@ -1,6 +1,6 @@
 import { MetadataRoute } from 'next';
 import { initializeDatabase } from '@/lib/db';
-import type { Quote } from '@/entities/Quote';
+import { Quote } from '@/entities/Quote';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://llmquotes.com').replace(/\/$/, '');
@@ -28,7 +28,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   try {
     const ds = await initializeDatabase();
-    const repo = ds.getRepository('Quote');
+    const repo = ds.getRepository(Quote);
     const quotes = await repo.find({ where: { status: 'posted' }, order: { postedAt: 'DESC' } });
 
     const dynamicEntries: MetadataRoute.Sitemap = quotes.map((q) => ({

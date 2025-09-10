@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 export const runtime = 'nodejs';
 import { initializeDatabase } from '@/lib/db';
-import type { Quote } from '@/entities/Quote';
+import { Quote } from '@/entities/Quote';
 import { ADMIN_SESSION_COOKIE, verifySessionToken } from '@/lib/adminAuth';
 
 export async function POST(request: NextRequest) {
@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
 
     // Initialize database
     const dataSource = await initializeDatabase();
-    const quoteRepository = dataSource.getRepository('Quote');
+    const quoteRepository = dataSource.getRepository(Quote);
 
     // Find quote
     const quote = await quoteRepository.findOne({
