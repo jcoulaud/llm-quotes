@@ -79,9 +79,10 @@ export default function QuotesPage() {
   return (
     <div className="max-w-6xl mx-auto px-8 py-12">
       <div className="mb-12">
-        <h1 className="nb-h1 mb-2">All Quotes</h1>
+        <h1 className="nb-h1 mb-4 md:mb-2">All Quotes</h1>
         <div className="flex items-center gap-2 flex-wrap">
-          <div className="flex gap-2 flex-wrap">
+          {/* Desktop buttons */}
+          <div className="hidden md:flex gap-2 flex-wrap">
             <button onClick={() => setFilter('all')} className={filter === 'all' ? 'brutal-button' : 'brutal-button ghost'}>
               ALL
             </button>
@@ -98,8 +99,26 @@ export default function QuotesPage() {
               POSTED
             </button>
           </div>
+
+          {/* Mobile dropdown for status */}
+          <div className="w-full md:hidden">
+            <select
+              className="brutal-select w-full"
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+              aria-label="Filter by status"
+            >
+              <option value="all">All statuses</option>
+              <option value="pending">Pending</option>
+              <option value="approved">Approved</option>
+              <option value="scheduled">Scheduled</option>
+              <option value="posted">Posted</option>
+            </select>
+          </div>
+
+          {/* Source dropdown */}
           <select
-            className="brutal-select ml-auto max-w-[320px]"
+            className="brutal-select md:ml-auto md:max-w-[320px] w-full md:w-auto mt-3 md:mt-0"
             value={sourceFilter}
             onChange={(e) => setSourceFilter(e.target.value)}
             aria-label="Filter by source"

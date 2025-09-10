@@ -81,7 +81,7 @@ export default function QuoteCard({ quote, showStatus = true, seenVersion = 0 }:
         <p className="font-medium">— {quote.llmSource}</p>
       </div>
       
-      <div className="flex justify-between items-center gap-4 pt-4 mt-2 flex-nowrap">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 pt-4 mt-2">
         <div className="flex items-center gap-3">
           {showStatus && (
             <span className={`badge ${getStatusColor(quote.status)}`}>
@@ -102,7 +102,7 @@ export default function QuoteCard({ quote, showStatus = true, seenVersion = 0 }:
           )}
         </div>
         
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-start">
           <span className="text-sm opacity-60">{formatDateOnly(quote.createdAt)}</span>
           <Link
             href={`/quotes/${quote.slug}`}
