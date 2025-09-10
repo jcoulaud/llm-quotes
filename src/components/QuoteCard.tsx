@@ -3,8 +3,8 @@
 import Link from 'next/link';
 import { formatDateOnly, getStatusColor } from '@/lib/utils';
 import type { QuoteDTO } from '@/types/quote';
-import { isSeen, markSeen } from '@/lib/read-tracker';
-import { useEffect, useRef, useState } from 'react';
+import { isSeen } from '@/lib/read-tracker';
+import { useEffect, useState } from 'react';
 
 interface QuoteCardProps {
   quote: QuoteDTO;
@@ -14,60 +14,15 @@ interface QuoteCardProps {
 
 export default function QuoteCard({ quote, showStatus = true, seenVersion = 0 }: QuoteCardProps) {
   const [seen, setSeen] = useState(false);
-  const cardRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     setSeen(isSeen(quote.slug));
   }, [quote.slug, seenVersion]);
 
-  useEffect(() => {
-    if (seen) return;
-    const node = cardRef.current;
-    if (!node || typeof window === 'undefined') return;
-
-    let timer: ReturnType<typeof setTimeout> | null = null;
-    const mark = () => {
-      markSeen(quote.slug);
-      setSeen(true);
-    };
-
-    if ('IntersectionObserver' in window) {
-      const obs = new IntersectionObserver(
-        (entries) => {
-          const entry = entries[0];
-          if (entry && entry.isIntersecting) {
-            if (!timer) timer = setTimeout(mark, 10000);
-          } else {
-            if (timer) {
-              clearTimeout(timer);
-              timer = null;
-            }
-          }
-        },
-        { threshold: 0.5 }
-      );
-      obs.observe(node);
-      return () => {
-        if (timer) clearTimeout(timer);
-        obs.disconnect();
-      };
-    }
-
-    // Fallback: mark on click if observer unavailable
-    return () => {
-      if (timer) clearTimeout(timer);
-    };
-  }, [quote.slug, seen]);
-
-  const handleMarkSeen = () => {
-    try {
-      markSeen(quote.slug);
-      setSeen(true);
-    } catch {}
-  };
+  // Removed viewport and click-based marking: only detail page marks seen.
 
   return (
-    <div ref={cardRef} className="brutal-card mb-4">
+    <div className="brutal-card mb-4">
       {seen && (
         <span
           className="badge badge-seen badge-compact seen-flag"
@@ -107,7 +62,6 @@ export default function QuoteCard({ quote, showStatus = true, seenVersion = 0 }:
           <Link
             href={`/quotes/${quote.slug}`}
             className="badge badge-posted"
-            onClick={handleMarkSeen}
           >
             VIEW →
           </Link>
