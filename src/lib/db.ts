@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
-import { Quote } from '../entities/Quote';
-import { CreateQuotesTable1736550000000 } from '../migrations/1736550000000-CreateQuotesTable';
+import { Quote } from '@/entities/Quote';
+import { CreateQuotesTable1736550000000 } from '@/migrations/1736550000000-CreateQuotesTable';
 
 const isProduction = process.env.NODE_ENV === 'production';
 const runMigrationsOnStartup = process.env.RUN_MIGRATIONS_ON_STARTUP === 'true';
