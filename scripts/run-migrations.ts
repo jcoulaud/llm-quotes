@@ -1,5 +1,6 @@
 import 'reflect-metadata';
-import { initializeDatabase } from '../src/lib/db';
+// Use the migration-safe DB config with relative imports
+import { initializeDatabase } from '../src/lib/db.migration';
 
 async function run() {
   try {
