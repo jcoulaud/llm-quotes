@@ -18,8 +18,8 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        // Use explicit image extension for better crawler compatibility (e.g. Twitter)
-        url: "/opengraph-image.png",
+        // Absolute URL with cache-busting for reliable scraper fetch
+        url: `${(process.env.NEXT_PUBLIC_SITE_URL || 'https://llmquotes.com').replace(/\/$/, '')}/opengraph-image.png?v=${process.env.VERCEL_GIT_COMMIT_SHA?.slice(0,8) || 'v1'}`,
         width: 1200,
         height: 630,
         alt: "LLM Quotes",
@@ -32,8 +32,8 @@ export const metadata: Metadata = {
     creator: "@LlmQuotes",
     images: [
       {
-        // Prefer .png extension so social crawlers treat this as an image URL
-        url: "/opengraph-image.png",
+        // Absolute URL with cache-busting to avoid stale Twitter cache
+        url: `${(process.env.NEXT_PUBLIC_SITE_URL || 'https://llmquotes.com').replace(/\/$/, '')}/opengraph-image.png?v=${process.env.VERCEL_GIT_COMMIT_SHA?.slice(0,8) || 'v1'}`,
         alt: "LLM Quotes",
       },
     ],
