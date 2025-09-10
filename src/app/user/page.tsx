@@ -4,6 +4,9 @@ import { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
+// Force dynamic rendering for this page to avoid SSG issues with Clerk
+export const dynamic = 'force-dynamic';
+
 export default function Page() {
   return (
     <div className='nb-container py-12'>
