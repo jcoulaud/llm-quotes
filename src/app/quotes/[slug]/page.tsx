@@ -4,6 +4,7 @@ import { initializeDatabase } from '@/lib/db';
 import type { Quote } from '@/entities/Quote';
 import Link from 'next/link';
 import React from 'react';
+import ReadTracker from '@/components/ReadTracker';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -153,6 +154,8 @@ export default async function QuotePage({ params }: PageProps) {
 
   return (
     <div className="nb-container py-8">
+      {/* Mark as read on the client when this page is viewed */}
+      <ReadTracker slug={slug} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

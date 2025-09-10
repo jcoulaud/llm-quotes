@@ -259,6 +259,30 @@ body {
   text-decoration: line-through;
 }
 
+/* Custom badge for read items */
+.badge-seen {
+  background: var(--nb-green);
+  color: var(--nb-ink);
+  border-color: var(--nb-ink);
+}
+
+/* Absolute-positioned seen flag on cards */
+.seen-flag {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  z-index: 6;
+  pointer-events: none; /* purely informational */
+  box-shadow: none; /* eliminate white gap when overlapping */
+}
+
+/* Compact badge size for overlays */
+.badge-compact {
+  padding: 4px 10px;
+  font-size: 10px;
+  border-width: 3px;
+}
+
 /* Subtle status badge (less button-like) */
 .status-badge {
   display: inline-flex;
