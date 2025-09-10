@@ -80,6 +80,7 @@ export default function SubmitForm({ compact = false }: { compact?: boolean }) {
   };
 
   const { remaining } = checkRateLimit();
+  const dailyLimitReached = remaining === 0;
 
   return (
     <div className={compact ? "px-0" : "max-w-3xl mx-auto px-8 py-12"}>
@@ -94,6 +95,11 @@ export default function SubmitForm({ compact = false }: { compact?: boolean }) {
         {errors.general && (
           <div className="error-box mb-6">
             {errors.general}
+          </div>
+        )}
+        {!errors.general && dailyLimitReached && (
+          <div className="error-box mb-6">
+            <strong>Daily limit reached.</strong> You’ve reached the limit of 5 submissions today. Please try again tomorrow.
           </div>
         )}
         
