@@ -85,7 +85,7 @@ export default function QuotesPage() {
         <div className="flex items-center gap-2 flex-wrap">
           <div className="flex gap-2 flex-wrap">
             <button onClick={() => setFilter('all')} className={filter === 'all' ? 'brutal-button' : 'brutal-button ghost'}>
-              ALL ({total})
+              ALL
             </button>
             <button onClick={() => setFilter('pending')} className={filter === 'pending' ? 'brutal-button' : 'brutal-button ghost'}>
               PENDING
