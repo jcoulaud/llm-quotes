@@ -10,6 +10,7 @@ export default function QuotesPage() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
   const [sourceFilter, setSourceFilter] = useState<string>('all');
+  const [timeframe, setTimeframe] = useState<'all' | '1h' | '1d'>('all');
   const [offset, setOffset] = useState(0);
   const [limit] = useState(50);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -33,6 +34,9 @@ export default function QuotesPage() {
         }
         params.append('limit', String(limit));
         params.append('offset', String(pageOffset));
+        if (timeframe !== 'all') {
+          params.append('timeframe', timeframe);
+        }
 
         const response = await fetch(`/api/quotes/list?${params}`);
         const data = await response.json();
@@ -58,7 +62,7 @@ export default function QuotesPage() {
         }
       }
     },
-    [filter, sourceFilter, limit]
+    [filter, sourceFilter, timeframe, limit]
   );
 
   // No fetch needed: use full known list of LLM sources
@@ -112,9 +116,21 @@ export default function QuotesPage() {
             </select>
           </div>
 
+          {/* Timeframe dropdown (left of Source on desktop, above on mobile) */}
+          <select
+            className="brutal-select md:ml-auto md:max-w-[200px] w-full md:w-auto mt-3 md:mt-0"
+            value={timeframe}
+            onChange={(e) => setTimeframe(e.target.value as 'all' | '1d' | '1h')}
+            aria-label="Filter by timeframe"
+          >
+            <option value="all">All time</option>
+            <option value="1d">Last 1 day</option>
+            <option value="1h">Last 1 hour</option>
+          </select>
+
           {/* Source dropdown */}
           <select
-            className="brutal-select md:ml-auto md:max-w-[320px] w-full md:w-auto mt-3 md:mt-0"
+            className="brutal-select md:max-w-[320px] w-full md:w-auto mt-3 md:mt-0 md:ml-2"
             value={sourceFilter}
             onChange={(e) => setSourceFilter(e.target.value)}
             aria-label="Filter by source"
