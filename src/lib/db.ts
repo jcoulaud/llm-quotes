@@ -3,7 +3,6 @@ import { DataSource } from 'typeorm';
 import { Quote } from '../entities/Quote';
 import { CreateQuotesTable1736550000000 } from '../migrations/1736550000000-CreateQuotesTable';
 
-const isProduction = process.env.NODE_ENV === 'production';
 const runMigrationsOnStartup = process.env.RUN_MIGRATIONS_ON_STARTUP === 'true';
 
 const maxPool = parseInt(process.env.PGPOOL_MAX || '5', 10);
@@ -35,7 +34,6 @@ const dataSourceOptions = {
 };
 
 declare global {
-  // eslint-disable-next-line no-var
   var __APP_DATA_SOURCE__: DataSource | undefined;
 }
 

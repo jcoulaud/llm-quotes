@@ -9,7 +9,6 @@ export default function QuotesPage() {
   const [quotes, setQuotes] = useState<QuoteDTO[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
-  const [total, setTotal] = useState(0);
   const [sourceFilter, setSourceFilter] = useState<string>('all');
   const [offset, setOffset] = useState(0);
   const [limit] = useState(50);
@@ -46,7 +45,6 @@ export default function QuotesPage() {
             setQuotes(data.quotes);
             setOffset(data.quotes.length);
           }
-          setTotal(data.total);
           const nextHasMore = pageOffset + data.quotes.length < data.total;
           setHasMore(nextHasMore);
         }
