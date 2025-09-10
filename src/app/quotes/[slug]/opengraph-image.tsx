@@ -1,6 +1,6 @@
 import { ImageResponse } from 'next/og';
 import { initializeDatabase } from '@/lib/db';
-import type { Quote } from '@/entities/Quote';
+import { Quote } from '@/entities/Quote';
 import { readFile } from 'fs/promises';
 
 let brandImageDataUri: string | null = null;
@@ -15,7 +15,7 @@ export const contentType = 'image/png';
 async function getQuote(slug: string): Promise<Quote | null> {
   try {
     const dataSource = await initializeDatabase();
-    const quoteRepository = dataSource.getRepository<Quote>('Quote' as any);
+    const quoteRepository = dataSource.getRepository(Quote);
     return await quoteRepository.findOne({ where: { slug } });
   } catch (error) {
     console.error('Error fetching quote for OG image:', error);
