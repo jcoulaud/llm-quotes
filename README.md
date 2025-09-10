@@ -11,7 +11,7 @@ A Neo-Brutalist styled web application for submitting, moderating, and sharing q
 - 👮 **Admin Dashboard**: Moderate submissions (approve/reject/schedule)
 - 🐦 **Twitter Integration**: Automated posting to @LlmQuotes with user tagging
 - ⏰ **Scheduled Posting**: Queue approved quotes for future posting
-- 🚦 **Rate Limiting**: 5 submissions per day per user (localStorage based)
+- 🚦 **Rate Limiting**: 20 submissions per day per user (localStorage based)
 
 ## Tech Stack
 
@@ -192,7 +192,7 @@ Posting uses the official Twitter API (see `src/lib/twitter.ts`). Reading existi
 ## Features in Detail
 
 ### Quote Submission
-- Rate limited to 5/day per user
+- Rate limited to 20/day per user
 - Validates quote length (10-500 chars)
 - Optional Twitter handle for attribution
 

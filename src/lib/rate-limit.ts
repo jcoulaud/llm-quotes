@@ -1,5 +1,5 @@
 const RATE_LIMIT_KEY = 'quote_submissions';
-const MAX_SUBMISSIONS_PER_DAY = 5;
+const MAX_SUBMISSIONS_PER_DAY = 20;
 
 interface RateLimitData {
   date: string;

@@ -23,7 +23,7 @@ export default function SubmitForm({ compact = false }: { compact?: boolean }) {
     // Check rate limit
     const { allowed } = checkRateLimit();
     if (!allowed) {
-      setErrors({ general: 'You have reached the daily limit of 5 submissions. Please try again tomorrow.' });
+      setErrors({ general: 'You have reached the daily limit of 20 submissions. Please try again tomorrow.' });
       return;
     }
 
@@ -99,7 +99,7 @@ export default function SubmitForm({ compact = false }: { compact?: boolean }) {
         )}
         {!errors.general && dailyLimitReached && (
           <div className="error-box mb-6">
-            <strong>Daily limit reached.</strong> You’ve reached the limit of 5 submissions today. Please try again tomorrow.
+            <strong>Daily limit reached.</strong> You've reached the limit of 20 submissions today. Please try again tomorrow.
           </div>
         )}
         
