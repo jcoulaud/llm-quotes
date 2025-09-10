@@ -5,6 +5,7 @@ import type { Quote } from '@/entities/Quote';
 import Link from 'next/link';
 import React from 'react';
 import ReadTracker from '@/components/ReadTracker';
+import FavoriteButton from '@/components/FavoriteButton';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -191,7 +192,8 @@ export default async function QuotePage({ params }: PageProps) {
               </p>
             </div>
 
-            <div className="flex gap-4">
+            <div className="flex gap-3 items-center">
+              <FavoriteButton slug={slug} size={20} />
               {quote.tweetId && (
                 <a
                   href={`https://x.com/LlmQuotes/status/${quote.tweetId}`}

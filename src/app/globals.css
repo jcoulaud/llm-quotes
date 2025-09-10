@@ -269,11 +269,41 @@ body {
 /* Absolute-positioned seen flag on cards */
 .seen-flag {
   position: absolute;
-  top: -10px;
   right: -10px;
+  bottom: -10px;
   z-index: 6;
   pointer-events: none; /* purely informational */
   box-shadow: none; /* eliminate white gap when overlapping */
+}
+
+/* Favorite star button */
+.fav-star-btn {
+  cursor: pointer;
+  transition: transform 120ms ease, filter 120ms ease;
+}
+.fav-star-btn:hover {
+  transform: translate(-1px, -1px);
+  filter: drop-shadow(2px 2px 0 var(--nb-yellow));
+}
+.fav-star-btn:active {
+  transform: translate(0px, 0px);
+}
+.fav-star-btn:focus-visible {
+  outline: 2px dashed var(--nb-ink);
+  outline-offset: 2px;
+}
+
+/* Small dot to mark unseen quotes */
+.unseen-dot {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  background: var(--nb-purple);
+  border: var(--nb-border) solid var(--nb-ink);
+  box-shadow: 2px 2px 0 0 var(--nb-pink);
 }
 
 /* Compact badge size for overlays */

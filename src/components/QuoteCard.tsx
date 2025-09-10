@@ -5,6 +5,7 @@ import { formatDateOnly, getStatusColor } from '@/lib/utils';
 import type { QuoteDTO } from '@/types/quote';
 import { isSeen } from '@/lib/read-tracker';
 import { useEffect, useState } from 'react';
+import FavoriteButton from '@/components/FavoriteButton';
 
 interface QuoteCardProps {
   quote: QuoteDTO;
@@ -23,14 +24,10 @@ export default function QuoteCard({ quote, showStatus = true, seenVersion = 0 }:
 
   return (
     <div className="brutal-card mb-4">
-      {seen && (
-        <span
-          className="badge badge-seen badge-compact seen-flag"
-          aria-label="You saw this quote"
-        >
-          SEEN
-        </span>
-      )}
+      {/* Favorite star in top-right */}
+      <FavoriteButton slug={quote.slug} size={18} className="absolute top-2 right-2" />
+      {/* Unseen indicator (small dot), shown only if not seen */}
+      {!seen && <span className="unseen-dot" aria-label="Unseen quote" />}
       <div className="mb-4">
         <p className="text-base mb-3 leading-relaxed">&ldquo;{quote.content}&rdquo;</p>
         <p className="font-medium">— {quote.llmSource}</p>
@@ -57,7 +54,7 @@ export default function QuoteCard({ quote, showStatus = true, seenVersion = 0 }:
           )}
         </div>
         
-        <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-start">
+        <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-start">
           <span className="text-sm opacity-60">{formatDateOnly(quote.createdAt)}</span>
           <Link
             href={`/quotes/${quote.slug}`}

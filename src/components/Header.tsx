@@ -27,6 +27,8 @@ export default function Header() {
     };
   }, []);
 
+  // Always show Favorites link (no local dependency)
+
   useEffect(() => {
     if (open) {
       const prev = document.body.style.overflow;
@@ -88,6 +90,9 @@ export default function Header() {
           <div className='hidden md:flex items-center gap-3'>
             <Link href='/quotes' className='text-sm font-medium transition-colors'>
               ALL QUOTES
+            </Link>
+            <Link href='/favorites' className='text-sm font-medium transition-colors'>
+              FAVORITES
             </Link>
             <button onClick={() => setOpen(true)} className='brutal-button text-sm'>
               SUBMIT QUOTE
@@ -162,6 +167,12 @@ export default function Header() {
                 onClick={() => setMobileOpen(false)}
                 className='text-lg font-extrabold tracking-wider'>
                 ALL QUOTES
+              </Link>
+              <Link
+                href='/favorites'
+                onClick={() => setMobileOpen(false)}
+                className='text-lg font-extrabold tracking-wider'>
+                FAVORITES
               </Link>
               <button
                 onClick={() => {
