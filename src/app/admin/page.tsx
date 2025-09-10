@@ -185,7 +185,7 @@ export default function AdminPage() {
           </div>
 
           {/* Rate Limit Panel */}
-          <div className="relative">
+          <div className="relative col-span-2">
             <div className="brutal-card p-4" style={{ background: 'var(--nb-white)' }}>
               <div className="flex items-center justify-between mb-2">
                 <div className="text-xs uppercase font-extrabold tracking-widest opacity-70">Twitter Rate Limit</div>
@@ -207,17 +207,6 @@ export default function AdminPage() {
                       <strong>{limits.summary.postsLeftToday.toLocaleString()}</strong>
                     </div>
                   )}
-                  <div className="mb-1">
-                    Window:{' '}
-                    <strong>
-                      {typeof limits.summary.windowRemaining === 'number'
-                        ? limits.summary.windowRemaining.toLocaleString()
-                        : '—'}
-                    </strong>
-                    {typeof limits.summary.windowLimit === 'number' ? (
-                      <>/{limits.summary.windowLimit.toLocaleString()}</>
-                    ) : null}
-                  </div>
                   <div className="opacity-80">
                     Resets: {limits.summary.dayResetAt ? formatDate(limits.summary.dayResetAt) : limits.summary.windowResetAt ? formatDate(limits.summary.windowResetAt) : '—'}{' '}
                     <span className="opacity-70">{formatRelative(limits.summary.dayResetAt || limits.summary.windowResetAt)}</span>
