@@ -138,6 +138,12 @@ pnpm run db:migrate
 
 This compiles a minimal build for the migration runner and executes it against the DB specified by `DATABASE_URL`.
 
+Env loading: the migration runner loads `.env.local` (if present) and then `.env` via `dotenv`.
+
+SSL: control via env/URL only. If your DB requires TLS, either keep `?ssl=true` (preferred) or `?sslmode=require` in `DATABASE_URL`, or set `PGSSLMODE=require`. To disable TLS locally, remove those URL params and/or set `PGSSLMODE=disable` (or `PGSSL=disable`).
+
+Node: use Node 22+ (see `"engines"` and `.nvmrc`).
+
 To run migrations on startup (not generally recommended in serverless), set:
 
 ```env

@@ -12,29 +12,20 @@ const maxPool = parseInt(process.env.PGPOOL_MAX || '5', 10);
 const connectionTimeoutMillis = parseInt(process.env.PG_CONNECTION_TIMEOUT_MS || '5000', 10);
 const idleTimeoutMillis = parseInt(process.env.PG_IDLE_TIMEOUT_MS || '30000', 10);
 
-function computeSslOption() {
+function computeSslOption(): boolean | undefined {
   const url = process.env.DATABASE_URL || '';
   const sslEnv = (process.env.PGSSL || process.env.PGSSLMODE || '').toLowerCase();
 
   // Explicit env overrides
-  if (sslEnv === 'disable' || sslEnv === 'false' || sslEnv === 'off') return false;
-  const requireFromEnv = sslEnv === 'require' || sslEnv === 'true' || sslEnv === 'on';
+  if (sslEnv === 'disable' || sslEnv === 'false' || sslEnv === 'off') return undefined;
+  if (sslEnv === 'require' || sslEnv === 'true' || sslEnv === 'on') return true;
 
   // Connection string hints
-  const urlHintsRequire = /([?&])sslmode=require(\b|&)/i.test(url) || /([?&])ssl=true(\b|&)/i.test(url);
+  const urlHintsRequire = /([?&])ssl=true(\b|&)/i.test(url) || /([?&])sslmode=require(\b|&)/i.test(url);
+  if (urlHintsRequire) return true;
 
-  // Heuristic: enable SSL for non-local hosts if not explicitly disabled
-  let nonLocalHost = false;
-  try {
-    const parsed = new URL(url);
-    const host = parsed.hostname;
-    nonLocalHost = !!host && host !== 'localhost' && host !== '127.0.0.1';
-  } catch {
-    // ignore parse errors; default handled below
-  }
-
-  const shouldUseSsl = requireFromEnv || urlHintsRequire || nonLocalHost;
-  return shouldUseSsl ? { rejectUnauthorized: false } : false;
+  // Default: leave undefined (pg will not use SSL)
+  return undefined;
 }
 
 const dataSourceOptions = {

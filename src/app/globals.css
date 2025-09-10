@@ -648,7 +648,7 @@ body {
 .nb-toast-close {
   appearance: none;
   background: transparent;
-  border: var(--nb-border) solid var(--nb-ink);
+  border: none;
   color: currentColor;
   border-radius: 999px;
   width: 28px;
