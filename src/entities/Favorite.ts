@@ -5,9 +5,9 @@ export class Favorite {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  // Clerk user id
+  // Internal user UUID (FK to users.id)
   @Index('IDX_favorites_userId')
-  @Column('varchar')
+  @Column('uuid')
   userId!: string;
 
   // Quote foreign key
@@ -18,4 +18,3 @@ export class Favorite {
   @CreateDateColumn()
   createdAt!: Date;
 }
-

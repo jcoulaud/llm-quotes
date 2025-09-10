@@ -4,10 +4,11 @@ import { initializeDatabase } from '@/lib/db';
 import type { Quote } from '@/entities/Quote';
 import type { Favorite } from '@/entities/Favorite';
 import { auth } from '@clerk/nextjs/server';
+import { getOrCreateUserByClerkId } from '@/lib/users';
 
-async function getUserId() {
+async function getClerkUserId() {
   const { userId } = await auth();
-  return userId;
+  return userId ?? null;
 }
 
 export async function GET(
@@ -15,19 +16,20 @@ export async function GET(
   { params }: { params: Promise<{ slug: string }> },
 ) {
   try {
-    const userId = await getUserId();
-    if (!userId) {
+    const clerkId = await getClerkUserId();
+    if (!clerkId) {
       return NextResponse.json({ favorited: false }, { status: 200 });
     }
     const { slug } = await params;
     const dataSource = await initializeDatabase();
+    const user = await getOrCreateUserByClerkId(dataSource, clerkId);
     const quoteRepo = dataSource.getRepository<Quote>('quotes');
     const favoriteRepo = dataSource.getRepository<Favorite>('favorites');
 
     const quote = await quoteRepo.findOne({ where: { slug } });
     if (!quote) return NextResponse.json({ favorited: false }, { status: 200 });
 
-    const existing = await favoriteRepo.findOne({ where: { userId, quoteId: quote.id } });
+    const existing = await favoriteRepo.findOne({ where: { userId: user.id, quoteId: quote.id } });
     return NextResponse.json({ favorited: Boolean(existing) });
   } catch (error: unknown) {
     console.error('Error checking favorite:', error);
@@ -40,21 +42,22 @@ export async function POST(
   { params }: { params: Promise<{ slug: string }> },
 ) {
   try {
-    const userId = await getUserId();
-    if (!userId) {
+    const clerkId = await getClerkUserId();
+    if (!clerkId) {
       return NextResponse.json({ error: 'Sign in to favorite quotes' }, { status: 401 });
     }
     const { slug } = await params;
     const dataSource = await initializeDatabase();
+    const user = await getOrCreateUserByClerkId(dataSource, clerkId);
     const quoteRepo = dataSource.getRepository<Quote>('quotes');
     const favoriteRepo = dataSource.getRepository<Favorite>('favorites');
 
     const quote = await quoteRepo.findOne({ where: { slug } });
     if (!quote) return NextResponse.json({ error: 'Quote not found' }, { status: 404 });
 
-    const existing = await favoriteRepo.findOne({ where: { userId, quoteId: quote.id } });
+    const existing = await favoriteRepo.findOne({ where: { userId: user.id, quoteId: quote.id } });
     if (!existing) {
-      await favoriteRepo.insert({ userId, quoteId: quote.id });
+      await favoriteRepo.insert({ userId: user.id, quoteId: quote.id });
     }
     return NextResponse.json({ favorited: true });
   } catch (error: unknown) {
@@ -69,19 +72,20 @@ export async function DELETE(
   { params }: { params: Promise<{ slug: string }> },
 ) {
   try {
-    const userId = await getUserId();
-    if (!userId) {
+    const clerkId = await getClerkUserId();
+    if (!clerkId) {
       return NextResponse.json({ error: 'Sign in to favorite quotes' }, { status: 401 });
     }
     const { slug } = await params;
     const dataSource = await initializeDatabase();
+    const user = await getOrCreateUserByClerkId(dataSource, clerkId);
     const quoteRepo = dataSource.getRepository<Quote>('quotes');
     const favoriteRepo = dataSource.getRepository<Favorite>('favorites');
 
     const quote = await quoteRepo.findOne({ where: { slug } });
     if (!quote) return NextResponse.json({ error: 'Quote not found' }, { status: 404 });
 
-    await favoriteRepo.delete({ userId, quoteId: quote.id });
+    await favoriteRepo.delete({ userId: user.id, quoteId: quote.id });
     return NextResponse.json({ favorited: false });
   } catch (error: unknown) {
     console.error('Error removing favorite:', error);

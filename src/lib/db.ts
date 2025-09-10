@@ -2,9 +2,12 @@ import 'reflect-metadata';
 import { DataSource } from 'typeorm';
 import { Quote } from '../entities/Quote';
 import { Favorite } from '../entities/Favorite';
+import { User } from '../entities/User';
 import { CreateQuotesTable1736550000000 } from '../migrations/1736550000000-CreateQuotesTable';
 import { RemoveApprovedStatus1757462400000 } from '../migrations/1757462400000-RemoveApprovedStatus';
 import { CreateFavoritesTable1757605000000 } from '../migrations/1757605000000-CreateFavoritesTable';
+import { AddUsersAndLinkFavorites1757610000000 } from '../migrations/1757610000000-AddUsersAndLinkFavorites';
+import { AlterUsersAddDeletedAndLastSeen1757611000000 } from '../migrations/1757611000000-AlterUsersAddDeletedAndLastSeen';
 
 const runMigrationsOnStartup = process.env.RUN_MIGRATIONS_ON_STARTUP === 'true';
 
@@ -34,12 +37,14 @@ const dataSourceOptions = {
   // Always use migrations; avoid synchronize even in dev
   synchronize: false,
   logging: false,
-  entities: [Quote, Favorite],
+  entities: [Quote, Favorite, User],
   // Use explicit classes so Next bundles migrations in production
   migrations: [
     CreateQuotesTable1736550000000,
     RemoveApprovedStatus1757462400000,
     CreateFavoritesTable1757605000000,
+    AddUsersAndLinkFavorites1757610000000,
+    AlterUsersAddDeletedAndLastSeen1757611000000,
   ],
   migrationsTableName: 'migrations',
   subscribers: [],

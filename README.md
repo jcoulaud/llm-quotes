@@ -94,6 +94,15 @@ The admin login issues a signed, HTTP-only session cookie. Ensure `ADMIN_SESSION
 ## Database Schema
 
 ```typescript
+User {
+  id: string // UUID (internal)
+  clerkId: string // unique mapping to Clerk user
+  createdAt: Date
+  updatedAt: Date
+  deletedAt?: Date | null
+  lastSeenAt?: Date | null
+}
+
 Quote {
   id: number
   content: string
@@ -107,7 +116,29 @@ Quote {
   createdAt: Date
   postedAt?: Date
 }
+
+Favorite {
+  id: number
+  userId: string // UUID FK → users.id
+  quoteId: number // FK → quotes.id
+  createdAt: Date
+}
 ```
+
+## Clerk Webhooks
+
+- Endpoint: `POST /api/webhooks/clerk`
+- Env required: `CLERK_WEBHOOK_SECRET` (Clerk webhook signing secret, starts with `whsec_...`)
+
+Events handled
+- `user.created` / `user.updated`: upsert local user row (no PII stored).
+- `user.deleted`: soft-delete (`deletedAt`).
+- `session.created` / `session.ended` / `session.revoked`: update `lastSeenAt` for activity tracking.
+
+Security (Svix)
+- Clerk sends Svix-signed webhooks. We verify using the `svix` SDK with these headers:
+  - `svix-id`, `svix-timestamp`, `svix-signature`
+- Configure a Clerk webhook endpoint pointing to your URL and copy the displayed “Signing secret” into `CLERK_WEBHOOK_SECRET`.
 
 ## Deployment on Vercel
 
