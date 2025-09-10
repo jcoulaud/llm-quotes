@@ -3,40 +3,28 @@
 import { useEffect, useState } from 'react';
 import type { QuoteDTO } from '@/types/quote';
 import QuoteCard from '@/components/QuoteCard';
-import { getFavorites, onFavoritesChange } from '@/lib/favorites';
 
 export default function FavoritesPage() {
   const [quotes, setQuotes] = useState<QuoteDTO[]>([]);
   const [loading, setLoading] = useState(true);
 
-  async function load(slugs: string[]) {
-    if (!slugs || slugs.length === 0) {
-      setQuotes([]);
-      setLoading(false);
-      return;
-    }
+  async function load() {
     try {
-      const results = await Promise.all(
-        slugs.map(async (slug) => {
-          const res = await fetch(`/api/quotes/${slug}`);
-          if (!res.ok) throw new Error('Failed');
-          const q = await res.json();
-          const dto: QuoteDTO = {
-            id: q.id,
-            content: q.content,
-            llmSource: q.llmSource,
-            twitterHandle: q.twitterHandle ?? undefined,
-            status: q.status,
-            slug: q.slug,
-            createdAt: q.createdAt,
-            postedAt: q.postedAt ?? undefined,
-            tweetId: q.tweetId ?? undefined,
-            views: q.views,
-          };
-          return dto;
-        }),
-      );
-      // Preserve the user's saved order (most recent favorite should probably be last added), but keep as-is
+      const res = await fetch('/api/favorites');
+      if (!res.ok) throw new Error('Failed');
+      const data = await res.json();
+      const results: QuoteDTO[] = (data?.quotes || []).map((q: any) => ({
+        id: q.id,
+        content: q.content,
+        llmSource: q.llmSource,
+        twitterHandle: q.twitterHandle ?? undefined,
+        status: q.status,
+        slug: q.slug,
+        createdAt: q.createdAt,
+        postedAt: q.postedAt ?? undefined,
+        tweetId: q.tweetId ?? undefined,
+        views: q.views,
+      }));
       setQuotes(results);
     } catch {
       setQuotes([]);
@@ -46,10 +34,7 @@ export default function FavoritesPage() {
   }
 
   useEffect(() => {
-    const slugs = getFavorites();
-    load(slugs);
-    const off = onFavoritesChange((s) => load(s));
-    return off;
+    load();
   }, []);
 
   return (

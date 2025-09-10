@@ -5,6 +5,7 @@ import { verifySessionTokenEdge } from '@/lib/adminAuthEdge';
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 
 const favoritesMatcher = createRouteMatcher(['/favorites(.*)']);
+const apiFavoritesMatcher = createRouteMatcher(['/api/favorites(.*)']);
 
 // Helper: our existing admin auth logic
 async function handleAdminProtection(request: NextRequest) {
@@ -32,8 +33,8 @@ const hasClerk = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
 export default hasClerk
   ? clerkMiddleware(
       async (auth, request) => {
-        // Protect favorites with Clerk
-        if (favoritesMatcher(request)) {
+        // Protect favorites pages and API with Clerk
+        if (favoritesMatcher(request) || apiFavoritesMatcher(request)) {
           await auth.protect();
         }
 
@@ -54,5 +55,5 @@ export default hasClerk
     };
 
 export const config = {
-  matcher: ['/admin/:path*', '/favorites/:path*'],
+  matcher: ['/admin/:path*', '/favorites/:path*', '/api/favorites/:path*'],
 };

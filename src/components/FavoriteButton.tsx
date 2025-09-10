@@ -1,7 +1,8 @@
 "use client";
 
-import { isFavorite, toggleFavorite, onFavoritesChange } from '@/lib/favorites';
 import { CSSProperties, useEffect, useState } from 'react';
+import { useUser } from '@clerk/nextjs';
+import { useToast } from '@/components/ToastProvider';
 
 export default function FavoriteButton({
   slug,
@@ -15,16 +16,57 @@ export default function FavoriteButton({
   style?: CSSProperties;
 }) {
   const [fav, setFav] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const { isSignedIn } = useUser();
+  const toast = useToast();
 
   useEffect(() => {
-    setFav(isFavorite(slug));
-    const off = onFavoritesChange(() => setFav(isFavorite(slug)));
-    return off;
-  }, [slug]);
+    let cancelled = false;
+    async function check() {
+      if (!isSignedIn) {
+        setFav(false);
+        return;
+      }
+      try {
+        const res = await fetch(`/api/favorites/${slug}`, { method: 'GET' });
+        if (!cancelled && res.ok) {
+          const data = await res.json();
+          setFav(Boolean(data?.favorited));
+        }
+      } catch {}
+    }
+    check();
+    return () => {
+      cancelled = true;
+    };
+  }, [slug, isSignedIn]);
 
   const toggle = () => {
-    const now = toggleFavorite(slug);
-    setFav(now);
+    if (!isSignedIn) {
+      toast.error('Please sign in to favorite quotes');
+      return;
+    }
+    if (loading) return;
+    setLoading(true);
+    const doToggle = async () => {
+      try {
+        const method = fav ? 'DELETE' : 'POST';
+        const res = await fetch(`/api/favorites/${slug}`, { method });
+        if (res.status === 401) {
+          toast.error('Please sign in to favorite quotes');
+          setFav(false);
+          return;
+        }
+        if (!res.ok) return;
+        const data = await res.json();
+        setFav(Boolean(data?.favorited));
+      } catch {
+        // swallow
+      } finally {
+        setLoading(false);
+      }
+    };
+    void doToggle();
   };
 
   return (
