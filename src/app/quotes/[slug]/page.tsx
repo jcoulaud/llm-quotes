@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { initializeDatabase } from '@/lib/db';
 import { Quote } from '@/entities/Quote';
 import Link from 'next/link';
+import React from 'react';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -112,8 +113,42 @@ export default async function QuotePage({ params }: PageProps) {
   const shareBody = `${shareText}\n\n${permalink}`;
   const shareHref = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareBody)}`;
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'CreativeWork',
+    name: `${quote.llmSource} Quote`,
+    text: quote.content,
+    inLanguage: 'en',
+    url: permalink,
+    datePublished: quote.postedAt ? quote.postedAt.toISOString() : undefined,
+    author: {
+      '@type': 'Organization',
+      name: quote.llmSource,
+    },
+    contributor: quote.twitterHandle
+      ? {
+          '@type': 'Person',
+          name: `@${quote.twitterHandle}`,
+          sameAs: `https://x.com/${quote.twitterHandle}`,
+        }
+      : undefined,
+    isPartOf: {
+      '@type': 'WebSite',
+      name: 'LLM Quotes',
+      url: baseUrl,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'LLM Quotes',
+    },
+  };
+
   return (
     <div className="nb-container py-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div className="brutal-card p-8 w-full">
         <div className="mb-8">
           <h1 className="text-4xl mb-6 leading-tight">&ldquo;{quote.content}&rdquo;</h1>

@@ -4,6 +4,27 @@ import { Quote } from '@/entities/Quote';
 import { initializeDatabase } from '@/lib/db';
 import type { QuoteDTO } from '@/types/quote';
 import Link from 'next/link';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'The best of the worst LLM replies, all in one place.',
+  description:
+    'Real outputs from ChatGPT, Claude, Grok, Gemini, and more. Submit your favorite LLM quotes and browse the best (and worst) AI replies.',
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    title: 'The best of the worst LLM replies, all in one place.',
+    description:
+      'Discover and share the funniest, strangest, and most surprising LLM replies from ChatGPT, Claude, Grok, Gemini, and more.',
+    type: 'website',
+    url: '/',
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+};
 
 async function getRecentQuotes(): Promise<QuoteDTO[]> {
   try {
@@ -52,11 +73,7 @@ export default async function Home() {
         <div className='decoration decoration-circle absolute top-10 left-10 opacity-20'></div>
         <div className='decoration decoration-square absolute bottom-8 right-10 opacity-20'></div>
         <div className='nb-container'>
-          <h1 className='hero-text mb-6'>
-            The Internet’s Best LLM Quotes Collected
-            <br />
-            and Posted
-          </h1>
+          <h1 className='hero-text mb-6'>The best of the worst LLM replies, all in one place.</h1>
           <p className='subtitle mb-6 max-w-xl'>
             Real outputs from ChatGPT, Claude, Grok, Gemini, and more. Submit your favorites — the
             best hit{' '}
