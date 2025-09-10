@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
     const quote = new Quote();
     quote.content = validation.data.content;
     quote.llmSource = validation.data.llmSource;
-    quote.twitterHandle = validation.data.twitterHandle || undefined;
+    quote.twitterHandle = validation.data.twitterHandle?.replace('@', '') || undefined;
     quote.status = 'pending';
     quote.slug = generateSlug(validation.data.content);
     quote.views = 0;
