@@ -29,10 +29,16 @@ export default async function Image({ params }: { params: { slug: string } }) {
 
   // Inline the brand image as a data URI from /public to avoid header/URL issues
   if (!brandImageDataUri) {
-    const brandImageBuffer = await readFile(
-      process.cwd() + '/public/web-app-manifest-192x192.png'
-    );
-    brandImageDataUri = `data:image/png;base64,${brandImageBuffer.toString('base64')}`;
+    try {
+      const brandImageBuffer = await readFile(
+        process.cwd() + '/public/web-app-manifest-192x192.png'
+      );
+      brandImageDataUri = `data:image/png;base64,${brandImageBuffer.toString('base64')}`;
+    } catch {
+      // Fallback to absolute static URL if reading from filesystem is unavailable in the runtime
+      const base = process.env.NEXT_PUBLIC_SITE_URL || 'https://llmquotes.com';
+      brandImageDataUri = `${base.replace(/\/$/, '')}/web-app-manifest-192x192.png`;
+    }
   }
   const brandImageUrl = brandImageDataUri;
 
