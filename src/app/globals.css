@@ -101,6 +101,7 @@ body {
 /* Subtle extra hover accent for quote cards */
 .quote-card {
   overflow: hidden;
+  min-height: 200px;
 }
 
 /* Removed: wobble animation previously used for unseen quotes */
@@ -252,7 +253,7 @@ body {
   border-color: var(--nb-ink);
 }
 .badge-posted {
-  background: var(--nb-green);
+  background: var(--nb-ink);
   color: var(--nb-white);
   border-color: var(--nb-ink);
 }
