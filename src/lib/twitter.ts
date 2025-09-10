@@ -39,39 +39,40 @@ export async function postTweet(
   }
 
   try {
-    // Format the tweet
-    let tweetText = `"${content}"\n\n— ${llmSource}`;
-    
+    // Compute safe max quote length using t.co URL length
+    const TCO_URL_LENGTH = 24; // conservative allocation for any URL on X
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://llmquotes.com';
+
+    // Overhead before quote content: opening/closing quotes (2) + two newlines (2) + '— '
+    const baseOverhead = 2 + 2 + 2; // = 6
+    // LLM source length is added after the dash
+    const sourceLen = llmSource.length;
+    // Optional submitter block: two newlines + 'Submitted by @' + handle
+    const handleBlockLen = twitterHandle
+      ? 2 + 'Submitted by @'.length + twitterHandle.length
+      : 0;
+    // Optional URL block: two newlines + t.co reserved length
+    const urlBlockLen = slug ? 2 + TCO_URL_LENGTH : 0;
+
+    const overhead = baseOverhead + sourceLen + handleBlockLen + urlBlockLen;
+    const maxQuoteLength = Math.max(0, 280 - overhead);
+
+    let contentToUse = content;
+    if (content.length > maxQuoteLength) {
+      // Use '...' if we have room, otherwise hard cut
+      contentToUse = maxQuoteLength > 3
+        ? content.slice(0, maxQuoteLength - 3) + '...'
+        : content.slice(0, maxQuoteLength);
+    }
+
+    // Build the tweet deterministically after truncation
+    let tweetText = `"${contentToUse}"\n\n— ${llmSource}`;
     if (twitterHandle) {
       tweetText += `\n\nSubmitted by @${twitterHandle}`;
     }
-
-    // Append permalink to drive preview/card rendering on X
     if (slug) {
-      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://llmquotes.com';
       const url = `${baseUrl}/quotes/${slug}`;
       tweetText += `\n\n${url}`;
-    }
-
-    // Ensure tweet doesn't exceed 280 characters (recalculate after appending URL)
-    if (tweetText.length > 280) {
-      // Truncate the quote if necessary
-      const urlLength = slug ? (process.env.NEXT_PUBLIC_SITE_URL || 'https://llmquotes.com').length + '/quotes/'.length + slug.length : 0;
-      // Extra padding accounts for quotes/newlines and attribution text
-      const extraPadding = 10 + (twitterHandle ? 18 : 0) + (slug ? 2 : 0); // 2 for the extra newlines before URL
-      const maxQuoteLength = 280 - (llmSource.length + urlLength + extraPadding);
-      const truncatedContent = content.substring(0, maxQuoteLength - 3) + '...';
-      tweetText = `"${truncatedContent}"\n\n— ${llmSource}`;
-      
-      if (twitterHandle) {
-        tweetText += `\n\nSubmitted by @${twitterHandle}`;
-      }
-
-      if (slug) {
-        const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://llmquotes.com';
-        const url = `${baseUrl}/quotes/${slug}`;
-        tweetText += `\n\n${url}`;
-      }
     }
 
     // Post the tweet

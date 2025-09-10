@@ -106,7 +106,7 @@ export default function SubmitForm({ compact = false }: { compact?: boolean }) {
 
         <div className="mb-6">
           <label htmlFor="content" className="label">
-            Quote Content
+            Quote Content <span className="text-gray-500">(max 200 characters)</span>
           </label>
           <textarea
             id="content"
@@ -114,11 +114,16 @@ export default function SubmitForm({ compact = false }: { compact?: boolean }) {
             value={formData.content}
             onChange={(e) => setFormData({ ...formData, content: e.target.value })}
             placeholder="Enter the AI-generated quote here..."
+            maxLength={200}
             disabled={isSubmitting}
           />
-          {errors.content && (
-            <p className="error-text">{errors.content}</p>
-          )}
+          <div className="flex justify-between items-center mt-2">
+            {errors.content ? (
+              <p className="error-text">{errors.content}</p>
+            ) : (
+              <p className="text-sm text-gray-500">{200 - formData.content.length} characters remaining</p>
+            )}
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">

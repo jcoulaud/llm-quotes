@@ -4,7 +4,7 @@ import { LLM_SOURCES } from '@/types/llm-sources';
 export const quoteSubmissionSchema = z.object({
   content: z.string()
     .min(10, 'Quote must be at least 10 characters')
-    .max(500, 'Quote must be less than 500 characters'),
+    .max(200, 'Quote must be at most 200 characters (tweet-safe limit)'),
   llmSource: z.enum(LLM_SOURCES),
   twitterHandle: z.string()
     .regex(/^[A-Za-z0-9_]{1,15}$/, 'Invalid Twitter handle')

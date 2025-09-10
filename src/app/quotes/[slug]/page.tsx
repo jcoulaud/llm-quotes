@@ -61,7 +61,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       url: `/quotes/${slug}`,
       images: [
         {
-          url: `/quotes/${quote.slug}/opengraph-image`,
+          // Add .png extension for improved compatibility with Twitter's crawler
+          url: `/quotes/${quote.slug}/opengraph-image.png`,
           alt: `Quote from ${quote.llmSource}`,
         },
       ],
@@ -74,7 +75,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description,
       images: [
         {
-          url: `/quotes/${quote.slug}/opengraph-image`,
+          // Add .png extension for improved compatibility with Twitter's crawler
+          url: `/quotes/${quote.slug}/opengraph-image.png`,
           alt: `Quote from ${quote.llmSource}`,
         },
       ],

@@ -18,7 +18,8 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/opengraph-image",
+        // Use explicit image extension for better crawler compatibility (e.g. Twitter)
+        url: "/opengraph-image.png",
         width: 1200,
         height: 630,
         alt: "LLM Quotes",
@@ -31,7 +32,8 @@ export const metadata: Metadata = {
     creator: "@LlmQuotes",
     images: [
       {
-        url: "/opengraph-image",
+        // Prefer .png extension so social crawlers treat this as an image URL
+        url: "/opengraph-image.png",
         alt: "LLM Quotes",
       },
     ],
