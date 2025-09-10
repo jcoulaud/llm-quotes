@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import { DataSource } from 'typeorm';
 import { Quote } from '../entities/Quote';
 import { CreateQuotesTable1736550000000 } from '../migrations/1736550000000-CreateQuotesTable';
+import { RemoveApprovedStatus1757462400000 } from '../migrations/1757462400000-RemoveApprovedStatus';
 
 const runMigrationsOnStartup = process.env.RUN_MIGRATIONS_ON_STARTUP === 'true';
 
@@ -17,7 +18,7 @@ const dataSourceOptions = {
   logging: false,
   entities: [Quote],
   // Use explicit classes so Next bundles migrations in production
-  migrations: [CreateQuotesTable1736550000000],
+  migrations: [CreateQuotesTable1736550000000, RemoveApprovedStatus1757462400000],
   migrationsTableName: 'migrations',
   subscribers: [],
   ssl: {

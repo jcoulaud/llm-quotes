@@ -29,7 +29,6 @@ export function formatDateOnly(date: Date | string): string {
 export function getStatusColor(status: string): string {
   const colors: Record<string, string> = {
     pending: 'badge-pending',
-    approved: 'badge-approved',
     scheduled: 'badge-scheduled',
     posted: 'badge-posted',
     rejected: 'badge-rejected',

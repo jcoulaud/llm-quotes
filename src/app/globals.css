@@ -250,11 +250,6 @@ body {
   background: var(--nb-yellow);
   color: var(--nb-ink);
 }
-.badge-approved {
-  background: var(--nb-purple);
-  color: var(--nb-white);
-  border-color: var(--nb-ink);
-}
 .badge-blue {
   background: var(--nb-blue);
   color: var(--nb-white);

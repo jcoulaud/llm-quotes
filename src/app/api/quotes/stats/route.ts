@@ -26,7 +26,6 @@ export async function GET(request: NextRequest) {
 
     const counts: Record<string, number> = {
       pending: 0,
-      approved: 0,
       scheduled: 0,
       posted: 0,
       rejected: 0,

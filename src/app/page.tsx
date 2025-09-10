@@ -105,7 +105,7 @@ export default async function Home() {
         <section id='how-it-works' className='grid md:grid-cols-3 gap-8 py-10'>
           <div className='brutal-card'>
             <div className='card-accent'></div>
-            <span className='badge badge-approved mb-4'>Step 1</span>
+            <span className='badge badge-pending mb-4'>Step 1</span>
             <h3 className='nb-h3 mb-2'>Submit</h3>
             <p className='text-sm opacity-80'>
               Share your favorite quote and pick the LLM source. Add your Twitter handle to be
@@ -117,7 +117,7 @@ export default async function Home() {
             <span className='badge badge-blue mb-4'>Step 2</span>
             <h3 className='nb-h3 mb-2'>Moderate</h3>
             <p className='text-sm opacity-80'>
-              Admins review, approve, and schedule posts (for now). Community voting coming soon.
+              Admins review and schedule posts (for now). Community voting coming soon.
             </p>
           </div>
           <div className='brutal-card'>

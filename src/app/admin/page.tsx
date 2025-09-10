@@ -135,7 +135,7 @@ export default function AdminPage() {
       });
 
       if (response.ok) {
-        const actionLabel = action === 'approve' ? 'approved' : action === 'reject' ? 'rejected' : 'scheduled';
+        const actionLabel = action === 'reject' ? 'rejected' : 'scheduled';
         toast.success(`Quote ${actionLabel} successfully!`);
         fetchQuotes();
         setSelectedQuote(null);
@@ -170,7 +170,6 @@ export default function AdminPage() {
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-6 gap-4 col-span-full">
             {[
               { key: 'pending', label: 'Pending' },
-              { key: 'approved', label: 'Approved' },
               { key: 'scheduled', label: 'Scheduled' },
               { key: 'posted', label: 'Posted' },
               { key: 'rejected', label: 'Rejected' },
@@ -244,12 +243,7 @@ export default function AdminPage() {
           >
             Pending
           </button>
-          <button
-            onClick={() => setFilter('approved')}
-            className={`brutal-button ${filter === 'approved' ? 'bg-black text-white' : ''}`}
-          >
-            Approved
-          </button>
+          
           <button
             onClick={() => setFilter('scheduled')}
             className={`brutal-button ${filter === 'scheduled' ? 'bg-black text-white' : ''}`}
@@ -312,12 +306,6 @@ export default function AdminPage() {
               {quote.status === 'pending' && (
                 <div className="flex gap-4 flex-wrap">
                   <button
-                    onClick={() => handleModerate(quote.id, 'approve')}
-                    className="brutal-button bg-green-500"
-                  >
-                    Approve
-                  </button>
-                  <button
                     onClick={() => setSelectedQuote(quote)}
                     className="brutal-button bg-blue-500"
                   >
@@ -332,16 +320,6 @@ export default function AdminPage() {
                 </div>
               )}
 
-              {quote.status === 'approved' && (
-                <div className="flex gap-4">
-                  <button
-                    onClick={() => setSelectedQuote(quote)}
-                    className="brutal-button bg-blue-500"
-                  >
-                    Schedule
-                  </button>
-                </div>
-              )}
 
               {selectedQuote?.id === quote.id && (
                 <div className="mt-4 p-4 border-4 border-black">

@@ -41,9 +41,6 @@ export async function POST(request: NextRequest) {
 
     // Update quote status based on action
     switch (action) {
-      case 'approve':
-        quote.status = 'approved';
-        break;
       case 'reject':
         quote.status = 'rejected';
         break;

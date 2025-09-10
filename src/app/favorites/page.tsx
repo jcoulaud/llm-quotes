@@ -68,7 +68,7 @@ export default function FavoritesPage() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {quotes.map((q) => (
-            <QuoteCard key={q.id} quote={q} showStatus={q.status !== 'approved'} />
+            <QuoteCard key={q.id} quote={q} showStatus={q.status !== 'posted'} />
           ))}
         </div>
       )}

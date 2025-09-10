@@ -7,7 +7,7 @@ import {
   Index,
 } from 'typeorm';
 
-export type QuoteStatus = 'pending' | 'approved' | 'scheduled' | 'posted' | 'rejected';
+export type QuoteStatus = 'pending' | 'scheduled' | 'posted' | 'rejected';
 
 @Entity('quotes')
 export class Quote {

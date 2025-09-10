@@ -89,9 +89,6 @@ export default function QuotesPage() {
             <button onClick={() => setFilter('pending')} className={filter === 'pending' ? 'brutal-button' : 'brutal-button ghost'}>
               PENDING
             </button>
-            <button onClick={() => setFilter('approved')} className={filter === 'approved' ? 'brutal-button' : 'brutal-button ghost'}>
-              APPROVED
-            </button>
             <button onClick={() => setFilter('scheduled')} className={filter === 'scheduled' ? 'brutal-button' : 'brutal-button ghost'}>
               SCHEDULED
             </button>
@@ -110,7 +107,6 @@ export default function QuotesPage() {
             >
               <option value="all">All statuses</option>
               <option value="pending">Pending</option>
-              <option value="approved">Approved</option>
               <option value="scheduled">Scheduled</option>
               <option value="posted">Posted</option>
             </select>
