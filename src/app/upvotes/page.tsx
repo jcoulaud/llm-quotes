@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import type { QuoteDTO } from '@/types/quote';
+import type { PublicQuoteDTO } from '@/types/quote';
 import QuoteCard from '@/components/QuoteCard';
 
 export default function UpvotesPage() {
-  const [quotes, setQuotes] = useState<QuoteDTO[]>([]);
+  const [quotes, setQuotes] = useState<PublicQuoteDTO[]>([]);
   const [loading, setLoading] = useState(true);
 
   async function load() {
@@ -13,8 +13,7 @@ export default function UpvotesPage() {
       const res = await fetch('/api/votes');
       if (!res.ok) throw new Error('Failed');
       const data = await res.json();
-      const results: QuoteDTO[] = (data?.quotes || []).map((q: QuoteDTO) => ({
-        id: q.id,
+      const results: PublicQuoteDTO[] = (data?.quotes || []).map((q: PublicQuoteDTO) => ({
         content: q.content,
         llmSource: q.llmSource,
         twitterHandle: q.twitterHandle ?? undefined,
@@ -24,6 +23,7 @@ export default function UpvotesPage() {
         postedAt: q.postedAt ?? undefined,
         tweetId: q.tweetId ?? undefined,
         views: q.views,
+        votedByMe: true,
       }));
       setQuotes(results);
     } catch {
@@ -53,15 +53,10 @@ export default function UpvotesPage() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {quotes.map((q) => (
-            <QuoteCard 
-              key={q.id}
-              quote={q} 
-              showStatus={q.status !== 'posted'} 
-            />
+            <QuoteCard key={q.slug} quote={q} showStatus={q.status !== 'posted'} />
           ))}
         </div>
       )}
     </div>
   );
 }
-

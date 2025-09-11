@@ -21,10 +21,23 @@ export async function GET() {
       .orderBy('v."createdAt"', 'DESC')
       .getMany();
 
-    return NextResponse.json({ quotes });
+    // Sanitize payload for client (omit numeric id)
+    const payload = quotes.map((q) => ({
+      content: q.content,
+      llmSource: q.llmSource,
+      twitterHandle: q.twitterHandle ?? undefined,
+      status: q.status,
+      slug: q.slug,
+      createdAt: q.createdAt,
+      postedAt: q.postedAt ?? undefined,
+      tweetId: q.tweetId ?? undefined,
+      views: q.views,
+      votedByMe: true,
+    }));
+
+    return NextResponse.json({ quotes: payload });
   } catch (error: unknown) {
     console.error('Error listing votes:', error);
     return NextResponse.json({ error: 'Failed to list votes' }, { status: 500 });
   }
 }
-

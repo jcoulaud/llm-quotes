@@ -23,7 +23,21 @@ export async function GET() {
       .orderBy('f."createdAt"', 'DESC')
       .getMany();
 
-    return NextResponse.json({ quotes });
+    // Sanitize payload for client (omit numeric id)
+    const payload = quotes.map((q) => ({
+      content: q.content,
+      llmSource: q.llmSource,
+      twitterHandle: q.twitterHandle ?? undefined,
+      status: q.status,
+      slug: q.slug,
+      createdAt: q.createdAt,
+      postedAt: q.postedAt ?? undefined,
+      tweetId: q.tweetId ?? undefined,
+      views: q.views,
+      favoritedByMe: true,
+    }));
+
+    return NextResponse.json({ quotes: payload });
   } catch (error: unknown) {
     console.error('Error listing favorites:', error);
     return NextResponse.json({ error: 'Failed to list favorites' }, { status: 500 });

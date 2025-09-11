@@ -1,21 +1,20 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import type { QuoteDTO } from '@/types/quote';
+import type { PublicQuoteDTO } from '@/types/quote';
 import QuoteCard from '@/components/QuoteCard';
 
 export default function FavoritesPage() {
-  const [quotes, setQuotes] = useState<QuoteDTO[]>([]);
+  const [quotes, setQuotes] = useState<PublicQuoteDTO[]>([]);
   const [loading, setLoading] = useState(true);
-  const [removingIds, setRemovingIds] = useState<Set<number>>(new Set());
+  const [removingSlugs, setRemovingSlugs] = useState<Set<string>>(new Set());
 
   async function load() {
     try {
       const res = await fetch('/api/favorites');
       if (!res.ok) throw new Error('Failed');
       const data = await res.json();
-      const results: QuoteDTO[] = (data?.quotes || []).map((q: QuoteDTO) => ({
-        id: q.id,
+      const results: PublicQuoteDTO[] = (data?.quotes || []).map((q: PublicQuoteDTO) => ({
         content: q.content,
         llmSource: q.llmSource,
         twitterHandle: q.twitterHandle ?? undefined,
@@ -25,6 +24,7 @@ export default function FavoritesPage() {
         postedAt: q.postedAt ?? undefined,
         tweetId: q.tweetId ?? undefined,
         views: q.views,
+        favoritedByMe: true,
       }));
       setQuotes(results);
     } catch {
@@ -38,14 +38,14 @@ export default function FavoritesPage() {
     load();
   }, []);
 
-  const handleUnfavorite = (quoteId: number) => {
-    setRemovingIds(prev => new Set(prev).add(quoteId));
+  const handleUnfavorite = (slug: string) => {
+    setRemovingSlugs(prev => new Set(prev).add(slug));
     
     setTimeout(() => {
-      setQuotes(prev => prev.filter(q => q.id !== quoteId));
-      setRemovingIds(prev => {
+      setQuotes(prev => prev.filter(q => q.slug !== slug));
+      setRemovingSlugs(prev => {
         const newSet = new Set(prev);
-        newSet.delete(quoteId);
+        newSet.delete(slug);
         return newSet;
       });
     }, 1000);
@@ -68,15 +68,15 @@ export default function FavoritesPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {quotes.map((q) => (
             <div
-              key={q.id}
+              key={q.slug}
               className={`transition-all duration-500 ${
-                removingIds.has(q.id) ? 'opacity-0 scale-95' : 'opacity-100 scale-100'
+                removingSlugs.has(q.slug) ? 'opacity-0 scale-95' : 'opacity-100 scale-100'
               }`}
             >
               <QuoteCard 
                 quote={q} 
                 showStatus={q.status !== 'posted'} 
-                onUnfavorite={() => handleUnfavorite(q.id)}
+                onUnfavorite={() => handleUnfavorite(q.slug)}
               />
             </div>
           ))}
