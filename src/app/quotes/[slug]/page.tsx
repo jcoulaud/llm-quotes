@@ -159,8 +159,12 @@ export default async function QuotePage({ params }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <div className="brutal-card p-8 w-full">
-        <div className="mb-8">
+      <div className="brutal-card p-8 w-full relative">
+        {/* Controls overlaid on the card corners */}
+        <UpvoteButton slug={slug} variant="chip" className="absolute top-2 left-2" />
+        <FavoriteButton slug={slug} size={20} className="absolute top-2 right-2" />
+
+        <div className="mb-8 mt-6">
           <h1 className="text-4xl mb-6 leading-tight">&ldquo;{quote.content}&rdquo;</h1>
           <p className="text-2xl mb-4">— {quote.llmSource}</p>
           
@@ -191,8 +195,6 @@ export default async function QuotePage({ params }: PageProps) {
             </div>
 
             <div className="flex gap-3 items-center">
-              <UpvoteButton slug={slug} size="regular" variant="tile" />
-              <FavoriteButton slug={slug} size={20} />
               {quote.tweetId && (
                 <a
                   href={`https://x.com/LlmQuotes/status/${quote.tweetId}`}
