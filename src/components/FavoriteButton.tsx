@@ -20,7 +20,7 @@ export default function FavoriteButton({
   initialFavorited?: boolean;
 }) {
   const [fav, setFav] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [, setLoading] = useState(false);
   const lastActionSeq = useRef(0);
   const { isSignedIn } = useUser();
   const toast = useToast();

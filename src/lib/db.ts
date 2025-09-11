@@ -89,11 +89,10 @@ export async function initializeDatabase() {
           try {
             await AppDataSource.destroy();
           } catch {}
-          const fresh = new DataSource(dataSourceOptions as any);
+          const fresh = new DataSource(dataSourceOptions);
           globalThis.__APP_DATA_SOURCE__ = fresh;
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          // @ts-ignore rebind exported reference in dev HMR
-          (global as any).AppDataSource = fresh;
+          // @ts-expect-error rebind exported reference in dev HMR
+          (global as DataSource).AppDataSource = fresh;
         }
       }
     };
@@ -101,7 +100,7 @@ export async function initializeDatabase() {
     await ensureMetadata();
 
     if (!globalThis.__APP_DATA_SOURCE__?.isInitialized) {
-      const ds = globalThis.__APP_DATA_SOURCE__ ?? new DataSource(dataSourceOptions as any);
+      const ds = globalThis.__APP_DATA_SOURCE__ ?? new DataSource(dataSourceOptions);
       if (!globalThis.__APP_DATA_SOURCE__) {
         globalThis.__APP_DATA_SOURCE__ = ds;
       }

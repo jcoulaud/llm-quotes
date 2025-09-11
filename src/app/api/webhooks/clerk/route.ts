@@ -5,12 +5,6 @@ import type { User as UserEntity } from '../../../../entities/User';
 
 export const runtime = 'nodejs';
 
-function getEnv(name: string) {
-  const v = process.env[name];
-  if (!v) throw new Error(`Missing env: ${name}`);
-  return v;
-}
-
 async function ensureUserByClerkId(clerkId: string): Promise<UserEntity> {
   const dataSource = await initializeDatabase();
   const userRepo = dataSource.getRepository<UserEntity>('users');
@@ -52,15 +46,16 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Invalid signature' }, { status: 403 });
   }
 
-  let body: any;
+  let body: unknown;
   try {
     body = JSON.parse(payload);
-  } catch (err) {
+  } catch {
     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
   }
 
-  const type = body?.type as string | undefined;
-  const data = body?.data ?? {};
+  const parsedBody = body as { type?: string; data?: unknown } | null;
+  const type = parsedBody?.type;
+  const data = (parsedBody?.data ?? {}) as Record<string, unknown>;
 
   try {
     const dataSource = await initializeDatabase();

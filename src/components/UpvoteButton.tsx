@@ -23,7 +23,7 @@ export default function UpvoteButton({
 }) {
   const [voted, setVoted] = useState(false);
   const [count, setCount] = useState<number>(0);
-  const [loading, setLoading] = useState(false);
+  const [, setLoading] = useState(false);
   const lastActionSeq = useRef(0);
   const { isSignedIn } = useUser();
   const toast = useToast();
