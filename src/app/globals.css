@@ -257,6 +257,11 @@ body {
   color: var(--nb-white);
   border-color: var(--nb-ink);
 }
+.badge-view {
+  background: var(--nb-ink);
+  color: var(--nb-white);
+  border-color: var(--nb-ink);
+}
 .badge-rejected {
   background: var(--nb-red);
   color: var(--nb-white);

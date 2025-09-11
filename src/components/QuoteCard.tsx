@@ -59,7 +59,7 @@ export default function QuoteCard({ quote, showStatus = true, onUnfavorite }: Qu
 
         <div className='flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-start'>
           <span className='text-sm opacity-60'>{formatDateOnly(quote.createdAt)}</span>
-          <Link href={`/quotes/${quote.slug}`} className='badge badge-posted'>
+          <Link href={`/quotes/${quote.slug}`} className='badge badge-view'>
             VIEW →
           </Link>
         </div>
