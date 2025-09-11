@@ -10,6 +10,7 @@ import { CreateFavoritesTable1757605000000 } from '../migrations/1757605000000-C
 import { AddUsersAndLinkFavorites1757610000000 } from '../migrations/1757610000000-AddUsersAndLinkFavorites';
 import { AlterUsersAddDeletedAndLastSeen1757611000000 } from '../migrations/1757611000000-AlterUsersAddDeletedAndLastSeen';
 import { CreateVotesTable1757612000000 } from '../migrations/1757612000000-CreateVotesTable';
+import { SetUsersIdDefault1757613000000 } from '../migrations/1757613000000-SetUsersIdDefault';
 
 const runMigrationsOnStartup = process.env.RUN_MIGRATIONS_ON_STARTUP === 'true';
 
@@ -48,6 +49,7 @@ const dataSourceOptions = {
     AddUsersAndLinkFavorites1757610000000,
     AlterUsersAddDeletedAndLastSeen1757611000000,
     CreateVotesTable1757612000000,
+    SetUsersIdDefault1757613000000,
   ],
   migrationsTableName: 'migrations',
   subscribers: [],
