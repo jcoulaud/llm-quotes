@@ -6,6 +6,8 @@ import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 
 const favoritesMatcher = createRouteMatcher(['/favorites(.*)']);
 const apiFavoritesMatcher = createRouteMatcher(['/api/favorites(.*)']);
+const votesMatcher = createRouteMatcher(['/upvotes(.*)']);
+const apiVotesMatcher = createRouteMatcher(['/api/votes(.*)']);
 
 // Helper: our existing admin auth logic
 async function handleAdminProtection(request: NextRequest) {
@@ -33,8 +35,17 @@ const hasClerk = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
 export default hasClerk
   ? clerkMiddleware(
       async (auth, request) => {
-        // Protect favorites pages and API with Clerk
+        // Protect favorites and votes pages and APIs with Clerk
+        // Favorites pages + API always require auth
         if (favoritesMatcher(request) || apiFavoritesMatcher(request)) {
+          await auth.protect();
+        }
+        // Upvotes page requires auth
+        if (votesMatcher(request)) {
+          await auth.protect();
+        }
+        // Votes API: allow GET for public counts, require auth for mutating actions
+        if (apiVotesMatcher(request) && request.method !== 'GET') {
           await auth.protect();
         }
 
@@ -55,5 +66,11 @@ export default hasClerk
     };
 
 export const config = {
-  matcher: ['/admin/:path*', '/favorites/:path*', '/api/favorites/:path*'],
+  matcher: [
+    '/admin/:path*',
+    '/favorites/:path*',
+    '/api/favorites/:path*',
+    '/upvotes/:path*',
+    '/api/votes/:path*',
+  ],
 };

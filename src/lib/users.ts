@@ -1,8 +1,8 @@
 import type { DataSource } from 'typeorm';
-import { User as UserEntity } from '@/entities/User';
+import type { User as UserEntity } from '../entities/User';
 
 export async function getOrCreateUserByClerkId(dataSource: DataSource, clerkId: string): Promise<UserEntity> {
-  const userRepo = dataSource.getRepository(UserEntity);
+  const userRepo = dataSource.getRepository<UserEntity>('users');
   const existing = await userRepo.findOne({ where: { clerkId } });
   if (existing) {
     existing.deletedAt = null;
@@ -16,6 +16,6 @@ export async function getOrCreateUserByClerkId(dataSource: DataSource, clerkId: 
 }
 
 export async function findUserByClerkId(dataSource: DataSource, clerkId: string): Promise<UserEntity | null> {
-  const userRepo = dataSource.getRepository(UserEntity);
+  const userRepo = dataSource.getRepository<UserEntity>('users');
   return userRepo.findOne({ where: { clerkId } });
 }

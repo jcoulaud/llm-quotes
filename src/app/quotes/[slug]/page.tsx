@@ -5,6 +5,7 @@ import type { Quote } from '@/entities/Quote';
 import Link from 'next/link';
 import React from 'react';
 import FavoriteButton from '@/components/FavoriteButton';
+import UpvoteButton from '@/components/UpvoteButton';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -190,6 +191,7 @@ export default async function QuotePage({ params }: PageProps) {
             </div>
 
             <div className="flex gap-3 items-center">
+              <UpvoteButton slug={slug} size="regular" variant="tile" />
               <FavoriteButton slug={slug} size={20} />
               {quote.tweetId && (
                 <a

@@ -67,6 +67,9 @@ export function UserMenu() {
           <Link href="/favorites" className="nb-dropdown-item" onClick={() => setOpen(false)}>
             Favorites
           </Link>
+          <Link href="/upvotes" className="nb-dropdown-item" onClick={() => setOpen(false)}>
+            Upvotes
+          </Link>
           <Link href="/user" className="nb-dropdown-item" onClick={() => setOpen(false)}>
             Manage account
           </Link>

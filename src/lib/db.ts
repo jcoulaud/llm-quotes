@@ -2,12 +2,14 @@ import 'reflect-metadata';
 import { DataSource } from 'typeorm';
 import { Quote } from '../entities/Quote';
 import { Favorite } from '../entities/Favorite';
+import { Vote } from '../entities/Vote';
 import { User } from '../entities/User';
 import { CreateQuotesTable1736550000000 } from '../migrations/1736550000000-CreateQuotesTable';
 import { RemoveApprovedStatus1757462400000 } from '../migrations/1757462400000-RemoveApprovedStatus';
 import { CreateFavoritesTable1757605000000 } from '../migrations/1757605000000-CreateFavoritesTable';
 import { AddUsersAndLinkFavorites1757610000000 } from '../migrations/1757610000000-AddUsersAndLinkFavorites';
 import { AlterUsersAddDeletedAndLastSeen1757611000000 } from '../migrations/1757611000000-AlterUsersAddDeletedAndLastSeen';
+import { CreateVotesTable1757612000000 } from '../migrations/1757612000000-CreateVotesTable';
 
 const runMigrationsOnStartup = process.env.RUN_MIGRATIONS_ON_STARTUP === 'true';
 
@@ -37,7 +39,7 @@ const dataSourceOptions = {
   // Always use migrations; avoid synchronize even in dev
   synchronize: false,
   logging: false,
-  entities: [Quote, Favorite, User],
+  entities: [Quote, Favorite, User, Vote],
   // Use explicit classes so Next bundles migrations in production
   migrations: [
     CreateQuotesTable1736550000000,
@@ -45,6 +47,7 @@ const dataSourceOptions = {
     CreateFavoritesTable1757605000000,
     AddUsersAndLinkFavorites1757610000000,
     AlterUsersAddDeletedAndLastSeen1757611000000,
+    CreateVotesTable1757612000000,
   ],
   migrationsTableName: 'migrations',
   subscribers: [],
@@ -72,10 +75,39 @@ if (!globalThis.__APP_DATA_SOURCE__) {
 
 export async function initializeDatabase() {
   try {
-    if (!AppDataSource.isInitialized) {
-      await AppDataSource.initialize();
+    // Recreate the DataSource if it's initialized but missing new entity metadata (HMR-safe)
+    const ensureMetadata = async () => {
+      if (AppDataSource.isInitialized) {
+        try {
+          // Accessing repositories will throw if metadata is missing
+          AppDataSource.getRepository('quotes');
+          AppDataSource.getRepository('favorites');
+          AppDataSource.getRepository('users');
+          AppDataSource.getRepository('votes');
+          return; // all good
+        } catch {
+          try {
+            await AppDataSource.destroy();
+          } catch {}
+          const fresh = new DataSource(dataSourceOptions as any);
+          globalThis.__APP_DATA_SOURCE__ = fresh;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          // @ts-ignore rebind exported reference in dev HMR
+          (global as any).AppDataSource = fresh;
+        }
+      }
+    };
+
+    await ensureMetadata();
+
+    if (!globalThis.__APP_DATA_SOURCE__?.isInitialized) {
+      const ds = globalThis.__APP_DATA_SOURCE__ ?? new DataSource(dataSourceOptions as any);
+      if (!globalThis.__APP_DATA_SOURCE__) {
+        globalThis.__APP_DATA_SOURCE__ = ds;
+      }
+      await ds.initialize();
       if (runMigrationsOnStartup) {
-        await AppDataSource.runMigrations();
+        await ds.runMigrations();
       }
       console.log('Database connected successfully');
     }
@@ -83,5 +115,5 @@ export async function initializeDatabase() {
     console.error('Error connecting to database:', error);
     throw error;
   }
-  return AppDataSource;
+  return globalThis.__APP_DATA_SOURCE__ as DataSource;
 }

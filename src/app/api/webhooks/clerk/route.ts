@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Webhook } from 'svix';
 import { initializeDatabase } from '@/lib/db';
-import { User as UserEntity } from '@/entities/User';
+import type { User as UserEntity } from '../../../../entities/User';
 
 export const runtime = 'nodejs';
 
@@ -13,7 +13,7 @@ function getEnv(name: string) {
 
 async function ensureUserByClerkId(clerkId: string): Promise<UserEntity> {
   const dataSource = await initializeDatabase();
-  const userRepo = dataSource.getRepository(UserEntity);
+  const userRepo = dataSource.getRepository<UserEntity>('users');
   const existing = await userRepo.findOne({ where: { clerkId } });
   if (existing) {
     existing.deletedAt = null;
@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const dataSource = await initializeDatabase();
-    const userRepo = dataSource.getRepository(UserEntity);
+    const userRepo = dataSource.getRepository<UserEntity>('users');
 
     switch (type) {
       case 'user.created': {

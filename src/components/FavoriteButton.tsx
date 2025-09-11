@@ -1,6 +1,6 @@
 "use client";
 
-import { CSSProperties, useEffect, useState } from 'react';
+import { CSSProperties, useEffect, useRef, useState } from 'react';
 import { useUser } from '@clerk/nextjs';
 import { useToast } from '@/components/ToastProvider';
 
@@ -19,6 +19,7 @@ export default function FavoriteButton({
 }) {
   const [fav, setFav] = useState(false);
   const [loading, setLoading] = useState(false);
+  const lastActionSeq = useRef(0);
   const { isSignedIn } = useUser();
   const toast = useToast();
 
@@ -48,26 +49,34 @@ export default function FavoriteButton({
       toast.error('Please sign in to favorite quotes');
       return;
     }
-    if (loading) return;
     setLoading(true);
+
+    const prevFav = fav;
+    const method = prevFav ? 'DELETE' : 'POST';
+    // Optimistic toggle
+    setFav(!prevFav);
+
     const doToggle = async () => {
       try {
-        const method = fav ? 'DELETE' : 'POST';
+        const seq = ++lastActionSeq.current;
         const res = await fetch(`/api/favorites/${slug}`, { method });
         if (res.status === 401) {
           toast.error('Please sign in to favorite quotes');
-          setFav(false);
+          if (seq === lastActionSeq.current) setFav(false);
           return;
         }
-        if (!res.ok) return;
-        const data = await res.json();
-        setFav(Boolean(data?.favorited));
-        
-        if (method === 'DELETE' && onUnfavorite) {
-          onUnfavorite();
+        if (!res.ok) {
+          // Revert on error
+          if (seq === lastActionSeq.current) setFav(prevFav);
+          return;
         }
+        const data = await res.json();
+        if (seq === lastActionSeq.current) setFav(Boolean(data?.favorited));
+
+        if (seq === lastActionSeq.current && method === 'DELETE' && onUnfavorite && !Boolean(data?.favorited)) onUnfavorite();
       } catch {
-        // swallow
+        // Revert on network error
+        if (lastActionSeq.current) setFav(prevFav);
       } finally {
         setLoading(false);
       }

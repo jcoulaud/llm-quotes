@@ -1,6 +1,7 @@
 'use client';
 
 import FavoriteButton from '@/components/FavoriteButton';
+import UpvoteButton from '@/components/UpvoteButton';
 import { formatDateOnly, getStatusColor } from '@/lib/utils';
 import type { QuoteDTO } from '@/types/quote';
 import Link from 'next/link';
@@ -16,9 +17,16 @@ export default function QuoteCard({ quote, showStatus = true, onUnfavorite }: Qu
 
   return (
     <div className={cardClass}>
-      {/* Favorite star in top-right */}
-      <FavoriteButton slug={quote.slug} size={18} className='absolute top-2 right-2' onUnfavorite={onUnfavorite} />
-      <div className='flex-grow'>
+      {/* Upvote at top-left */}
+      <UpvoteButton slug={quote.slug} variant='chip' className='absolute top-2 left-2' />
+      {/* Favorite in top-right */}
+      <FavoriteButton
+        slug={quote.slug}
+        size={18}
+        className='absolute top-2 right-2'
+        onUnfavorite={onUnfavorite}
+      />
+      <div className='flex-grow mt-6'>
         <p className='text-base mb-3 leading-relaxed quote-text'>&ldquo;{quote.content}&rdquo;</p>
         <p className='font-medium'>— {quote.llmSource}</p>
       </div>
