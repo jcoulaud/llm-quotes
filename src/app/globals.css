@@ -260,7 +260,6 @@ body {
 .badge-rejected {
   background: var(--nb-red);
   color: var(--nb-white);
-  text-decoration: line-through;
 }
 
 /* Removed: seen badge and flag styles */
