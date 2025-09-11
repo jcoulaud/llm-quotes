@@ -144,7 +144,7 @@ export default function UpvoteButton({
 
 function TriangleUpIcon({ size = 18 }: { size?: number }) {
   const stroke = 'currentColor';
-  const fill = 'none';
+  const fill = 'currentColor';
   return (
     <svg
       width={size}

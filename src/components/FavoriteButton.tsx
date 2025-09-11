@@ -101,7 +101,7 @@ export default function FavoriteButton({
       aria-label={fav ? 'Unfavorite quote' : 'Favorite quote'}
       aria-pressed={fav}
       onClick={toggle}
-      className={`fav-star-btn flex items-center justify-center ${className}`}
+      className={`fav-star-btn ${fav ? 'favorited' : ''} flex items-center justify-center ${className}`}
       title={fav ? 'Unfavorite' : 'Favorite'}
       style={{ background: 'transparent', border: 'none', padding: 0, lineHeight: 0, ...style }}
     >
@@ -112,7 +112,8 @@ export default function FavoriteButton({
 
 function StarIcon({ filled, size = 24 }: { filled: boolean; size?: number }) {
   const stroke = 'var(--nb-ink)';
-  const fill = filled ? 'var(--nb-yellow)' : 'none';
+  const fill = filled ? 'var(--nb-yellow)' : 'var(--nb-white)';
+  const strokeWidth = '2.5';
   return (
     <svg
       width={size}
@@ -123,11 +124,14 @@ function StarIcon({ filled, size = 24 }: { filled: boolean; size?: number }) {
       aria-hidden="true"
       focusable="false"
       style={{ display: 'block' }}
+      className="fav-star-icon"
     >
       <path
-        d="M12 2l2.9 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14l-5-4.87 7.1-1.01L12 2z"
+        d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14l-5-4.87 7.09-1.01L12 2z"
         stroke={stroke}
-        strokeWidth="2"
+        strokeWidth={strokeWidth}
+        strokeLinejoin="round"
+        strokeLinecap="round"
       />
     </svg>
   );

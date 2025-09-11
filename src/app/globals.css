@@ -239,8 +239,8 @@ body {
 }
 
 .badge-pending {
-  background: var(--nb-yellow);
-  color: var(--nb-ink);
+  background: var(--nb-purple);
+  color: var(--nb-white);
 }
 .badge-blue {
   background: var(--nb-blue);
@@ -273,22 +273,36 @@ body {
 .fav-star-btn {
   cursor: pointer;
   transition: transform 120ms ease, filter 120ms ease;
+  padding: 4px !important;
+  margin: -4px;
 }
-.fav-star-btn:hover {
+.fav-star-btn .fav-star-icon {
+  transition: transform 120ms ease, filter 120ms ease;
+}
+.fav-star-btn:hover .fav-star-icon {
   transform: translate(-1px, -1px);
-  filter: drop-shadow(2px 2px 0 var(--nb-yellow));
+  filter: drop-shadow(3px 3px 0 var(--nb-ink));
 }
-.fav-star-btn:active {
+.fav-star-btn:active .fav-star-icon {
   transform: translate(0px, 0px);
+  filter: drop-shadow(1px 1px 0 var(--nb-ink));
+}
+.fav-star-btn.favorited .fav-star-icon {
+  filter: drop-shadow(2px 2px 0 var(--nb-ink));
+}
+.fav-star-btn.favorited:hover .fav-star-icon {
+  transform: translate(-1px, -1px) rotate(5deg);
+  filter: drop-shadow(3px 3px 0 var(--nb-ink));
 }
 .fav-star-btn:focus-visible {
-  outline: 2px dashed var(--nb-ink);
+  outline: 2px solid var(--nb-ink);
   outline-offset: 2px;
+  border-radius: 4px;
 }
 
 /* Removed: unseen indicator dot */
 
-/* Minimal Upvote button */
+/* Brutal Upvote button */
 .upvote-inline {
   display: inline-flex;
   align-items: center;
@@ -299,10 +313,15 @@ body {
   cursor: pointer;
   color: var(--nb-ink);
   font-weight: 900;
+  transition: color 120ms ease;
 }
 .upvote-inline .upvote-icon {
   width: 16px;
   height: 16px;
+  transition: transform 120ms ease;
+}
+.upvote-inline:hover .upvote-icon {
+  transform: translateY(-1px);
 }
 .upvote-inline .upvote-count {
   font-variant-numeric: tabular-nums;
@@ -316,39 +335,65 @@ body {
   font-size: 12px;
 }
 .upvote-inline.voted {
-  color: var(--nb-blue);
+  color: var(--nb-ink);
+}
+.upvote-inline.voted .upvote-icon {
+  fill: var(--nb-yellow);
 }
 .upvote-inline:focus-visible {
-  outline: 2px dashed var(--nb-ink);
+  outline: 2px solid var(--nb-ink);
   outline-offset: 2px;
+  border-radius: 4px;
 }
 
 .upvote-chip {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   padding: 4px 8px;
-  border: 1px solid rgba(15, 15, 16, 0.2);
-  border-radius: 10px;
+  border: 2px solid var(--nb-ink);
+  border-radius: 999px;
   background: var(--nb-white);
   cursor: pointer;
   color: var(--nb-ink);
   font-weight: 900;
+  transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease, color 120ms ease, background 120ms ease;
+  box-shadow: 2px 2px 0 0 var(--nb-ink);
+}
+.upvote-chip:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 0 var(--nb-ink);
+}
+.upvote-chip:active {
+  transform: translate(0, 0);
+  box-shadow: 1px 1px 0 0 var(--nb-ink);
 }
 .upvote-chip .upvote-icon {
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
 }
 .upvote-chip .upvote-count {
   font-variant-numeric: tabular-nums;
-  font-size: 13px;
+  font-size: 12px;
+  letter-spacing: 0.02em;
 }
 .upvote-chip.voted {
-  border-color: var(--nb-blue);
-  color: var(--nb-blue);
+  background: var(--nb-yellow);
+  border-color: var(--nb-ink);
+  color: var(--nb-ink);
+  box-shadow: 2px 2px 0 0 var(--nb-ink);
+}
+.upvote-chip.voted .upvote-icon {
+  fill: var(--nb-ink);
+}
+.upvote-chip.voted:hover {
+  box-shadow: 3px 3px 0 0 var(--nb-ink);
+}
+.upvote-chip.voted:active {
+  box-shadow: 1px 1px 0 0 var(--nb-ink);
 }
 .upvote-chip:focus-visible {
-  outline: 2px dashed var(--nb-ink);
+  outline: 2px solid var(--nb-ink);
   outline-offset: 2px;
 }
 
@@ -357,66 +402,91 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-width: 56px;
-  min-height: 64px;
-  padding: 8px 10px;
-  border-radius: 14px;
-  border: 2px solid rgba(15, 15, 16, 0.18);
+  min-width: 48px;
+  min-height: 52px;
+  padding: 6px 8px;
+  border-radius: var(--nb-radius);
+  border: var(--nb-border) solid var(--nb-ink);
   background: var(--nb-white);
   color: var(--nb-ink);
   cursor: pointer;
-  transition: transform 80ms ease, box-shadow 80ms ease, border-color 120ms ease;
+  transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease, background 120ms ease, color 120ms ease;
+  box-shadow: 3px 3px 0 0 var(--nb-ink);
+  font-weight: 900;
 }
 .upvote-tile.small {
   min-width: 36px;
   min-height: 40px;
   padding: 4px 6px;
-  border-radius: 10px;
-  border-width: 1px;
+  border-radius: var(--nb-radius-sm);
+  box-shadow: 2px 2px 0 0 var(--nb-ink);
 }
 .upvote-tile:hover {
   transform: translate(-1px, -1px);
-  box-shadow: 4px 4px 0 0 var(--nb-yellow);
+  box-shadow: 4px 4px 0 0 var(--nb-ink);
 }
 .upvote-tile.small:hover {
-  transform: none;
-  box-shadow: none;
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 0 var(--nb-ink);
 }
 .upvote-tile:active {
-  transform: translate(1px, 1px);
-  box-shadow: 2px 2px 0 0 var(--nb-yellow);
+  transform: translate(0, 0);
+  box-shadow: 2px 2px 0 0 var(--nb-ink);
 }
 .upvote-tile.small:active {
-  transform: none;
-  box-shadow: none;
+  transform: translate(0, 0);
+  box-shadow: 1px 1px 0 0 var(--nb-ink);
 }
 .upvote-tile .upvote-icon {
   display: block;
-  width: 18px;
-  height: 18px;
-  margin-bottom: 6px;
+  width: 16px;
+  height: 16px;
+  margin-bottom: 4px;
+  stroke-width: 2.5;
 }
 .upvote-tile.small .upvote-icon {
   width: 12px;
   height: 12px;
-  margin-bottom: 3px;
+  margin-bottom: 2px;
+  stroke-width: 2.5;
 }
 .upvote-tile .upvote-count {
   font-weight: 1000;
   font-variant-numeric: tabular-nums;
-  font-size: 18px;
+  font-size: 14px;
   line-height: 1;
+  letter-spacing: 0.02em;
 }
 .upvote-tile.small .upvote-count {
-  font-size: 12px;
+  font-size: 11px;
 }
 .upvote-tile.voted {
-  border-color: var(--nb-blue);
-  color: var(--nb-blue);
+  background: var(--nb-yellow);
+  border-color: var(--nb-ink);
+  color: var(--nb-ink);
+  box-shadow: 3px 3px 0 0 var(--nb-ink);
+}
+.upvote-tile.small.voted {
+  box-shadow: 2px 2px 0 0 var(--nb-ink);
+}
+.upvote-tile.voted .upvote-icon {
+  fill: var(--nb-ink);
+}
+.upvote-tile.voted:hover {
+  box-shadow: 4px 4px 0 0 var(--nb-ink);
+}
+.upvote-tile.small.voted:hover {
+  box-shadow: 3px 3px 0 0 var(--nb-ink);
+}
+.upvote-tile.voted:active {
+  box-shadow: 2px 2px 0 0 var(--nb-ink);
+}
+.upvote-tile.small.voted:active {
+  box-shadow: 1px 1px 0 0 var(--nb-ink);
 }
 .upvote-tile:focus-visible {
-  outline: 2px dashed var(--nb-ink);
-  outline-offset: 2px;
+  outline: 2px solid var(--nb-ink);
+  outline-offset: 3px;
 }
 
 /* Compact badge size for overlays */
