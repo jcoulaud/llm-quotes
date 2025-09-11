@@ -253,7 +253,7 @@ body {
   border-color: var(--nb-ink);
 }
 .badge-posted {
-  background: var(--nb-ink);
+  background: var(--nb-green);
   color: var(--nb-white);
   border-color: var(--nb-ink);
 }
