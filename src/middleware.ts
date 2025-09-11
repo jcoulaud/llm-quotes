@@ -70,6 +70,9 @@ export const config = {
     '/admin/:path*',
     '/favorites/:path*',
     '/api/favorites/:path*',
+    // Ensure Clerk runs on quotes APIs so auth() works and
+    // list endpoints can return user-specific flags (e.g., votedByMe)
+    '/api/quotes/:path*',
     '/upvotes/:path*',
     '/api/votes/:path*',
   ],
