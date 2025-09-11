@@ -2,11 +2,11 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import QuoteCard from '@/components/QuoteCard';
-import type { QuoteDTO } from '@/types/quote';
+import type { PublicQuoteDTO } from '@/types/quote';
 import { LLM_SOURCES } from '@/types/llm-sources';
 
 export default function QuotesPage() {
-  const [quotes, setQuotes] = useState<QuoteDTO[]>([]);
+  const [quotes, setQuotes] = useState<PublicQuoteDTO[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
   const [sourceFilter, setSourceFilter] = useState<string>('all');
@@ -155,7 +155,7 @@ export default function QuotesPage() {
         <>
           <div className="grid gap-6 md:grid-cols-2">
             {quotes.map((quote) => (
-              <QuoteCard key={quote.id} quote={quote} showStatus={filter === 'all'} />
+              <QuoteCard key={quote.slug} quote={quote} showStatus={filter === 'all'} />
             ))}
           </div>
           {hasMore && (

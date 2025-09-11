@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 export const runtime = 'nodejs';
 import { initializeDatabase } from '@/lib/db';
+import type { Vote } from '@/entities/Vote';
+import type { Favorite } from '@/entities/Favorite';
+import { auth } from '@clerk/nextjs/server';
+import { findUserByClerkId } from '@/lib/users';
 import type { Quote } from '@/entities/Quote';
 
 export async function GET(request: NextRequest) {
@@ -11,10 +15,13 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '30');
     const offset = parseInt(searchParams.get('offset') || '0');
     const timeframe = (searchParams.get('timeframe') || 'all').toLowerCase();
+    const includeIds = (searchParams.get('includeIds') || '').toLowerCase() === 'true';
 
     // Initialize database
     const dataSource = await initializeDatabase();
     const quoteRepository = dataSource.getRepository<Quote>('quotes');
+    const voteRepository = dataSource.getRepository<Vote>('votes');
+    const favoriteRepository = dataSource.getRepository<Favorite>('favorites');
 
     // Build query
     const queryBuilder = quoteRepository.createQueryBuilder('quote');
@@ -72,12 +79,90 @@ export async function GET(request: NextRequest) {
 
     const [quotes, total] = await queryBuilder.getManyAndCount();
 
-    return NextResponse.json({
-      quotes,
-      total,
-      limit,
-      offset,
-    });
+    // Attach aggregated votes and user-voted flag in one go
+    const ids = quotes.map((q) => q.id);
+    let countsMap = new Map<number, number>();
+    let votedSet = new Set<number>();
+    let favoritedSet = new Set<number>();
+
+    if (ids.length > 0) {
+      // Count votes per quote for this page
+      const rawCounts = await voteRepository
+        .createQueryBuilder('v')
+        .select('v."quoteId"', 'quoteId')
+        .addSelect('COUNT(*)', 'count')
+        .where('v."quoteId" IN (:...ids)', { ids })
+        .groupBy('v."quoteId"')
+        .getRawMany<{ quoteId: string; count: string }>();
+
+      countsMap = new Map(
+        rawCounts.map((r) => [Number(r.quoteId), Number(r.count)])
+      );
+
+      // If signed in, mark quotes the user has voted for.
+      // Be tolerant if Clerk middleware didn't match this route.
+      let clerkId: string | null = null;
+      try {
+        const { userId } = await auth();
+        clerkId = userId ?? null;
+      } catch {
+        clerkId = null;
+      }
+      if (clerkId) {
+        const user = await findUserByClerkId(dataSource, clerkId);
+        if (user) {
+          const rawVoted = await voteRepository
+            .createQueryBuilder('v')
+            .select('v."quoteId"', 'quoteId')
+            .where('v."userId" = :userId', { userId: user.id })
+            .andWhere('v."quoteId" IN (:...ids)', { ids })
+            .getRawMany<{ quoteId: string }>();
+          votedSet = new Set(rawVoted.map((r) => Number(r.quoteId)));
+
+          // Fetch favorites for this user for the current page of quotes
+          const rawFav = await favoriteRepository
+            .createQueryBuilder('f')
+            .select('f."quoteId"', 'quoteId')
+            .where('f."userId" = :userId', { userId: user.id })
+            .andWhere('f."quoteId" IN (:...ids)', { ids })
+            .getRawMany<{ quoteId: string }>();
+          favoritedSet = new Set(rawFav.map((r) => Number(r.quoteId)));
+        }
+      }
+
+      // Mutate quote objects to include aggregated fields
+      for (const q of quotes) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (q as any).votesCount = countsMap.get(q.id) ?? 0;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (q as any).votedByMe = votedSet.has(q.id);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (q as any).favoritedByMe = favoritedSet.has(q.id);
+      }
+    }
+
+    // Build public payload, omitting id unless explicitly requested
+    const payloadQuotes = quotes.map((q) => ({
+      ...(includeIds ? { id: q.id } : {}),
+      content: q.content,
+      llmSource: q.llmSource,
+      twitterHandle: q.twitterHandle ?? undefined,
+      status: q.status,
+      slug: q.slug,
+      createdAt: q.createdAt,
+      postedAt: q.postedAt ?? undefined,
+      tweetId: q.tweetId ?? undefined,
+      views: q.views,
+      // aggregated flags added above
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      votesCount: (q as any).votesCount,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      votedByMe: (q as any).votedByMe,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      favoritedByMe: (q as any).favoritedByMe,
+    }));
+
+    return NextResponse.json({ quotes: payloadQuotes, total, limit, offset });
   } catch (error) {
     console.error('Error fetching quotes:', error);
     return NextResponse.json(

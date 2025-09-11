@@ -2,7 +2,7 @@ import QuoteCard from '@/components/QuoteCard';
 import SubmitQuoteButton from '@/components/SubmitQuoteButton';
 import type { Quote } from '@/entities/Quote';
 import { initializeDatabase } from '@/lib/db';
-import type { QuoteDTO } from '@/types/quote';
+import type { PublicQuoteDTO } from '@/types/quote';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   },
 };
 
-async function getRecentQuotes(): Promise<QuoteDTO[]> {
+async function getRecentQuotes(): Promise<PublicQuoteDTO[]> {
   try {
     const dataSource = await initializeDatabase();
     const quoteRepository = dataSource.getRepository<Quote>('quotes');
@@ -44,8 +44,7 @@ async function getRecentQuotes(): Promise<QuoteDTO[]> {
     });
 
     // Convert TypeORM entities (class instances) to plain objects safe for Client Components
-    const plain: QuoteDTO[] = quotes.map((q) => ({
-      id: q.id,
+    const plain: PublicQuoteDTO[] = quotes.map((q) => ({
       content: q.content,
       llmSource: q.llmSource,
       twitterHandle: q.twitterHandle ?? undefined,
@@ -139,7 +138,7 @@ export default async function Home() {
           ) : (
             <div className='grid gap-6 md:grid-cols-2'>
               {recentQuotes.slice(0, 10).map((quote) => (
-                <QuoteCard key={quote.id} quote={quote} showStatus={false} />
+                <QuoteCard key={quote.slug} quote={quote} showStatus={false} />
               ))}
             </div>
           )}

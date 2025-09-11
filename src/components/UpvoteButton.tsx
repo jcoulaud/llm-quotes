@@ -10,12 +10,16 @@ export default function UpvoteButton({
   style,
   size = 'small', // default to small
   variant = 'tile',
+  initialVoted,
+  initialCount,
 }: {
   slug: string;
   className?: string;
   style?: CSSProperties;
   size?: 'compact' | 'small' | 'regular' | 'micro';
   variant?: 'tile' | 'inline' | 'chip';
+  initialVoted?: boolean;
+  initialCount?: number;
 }) {
   const [voted, setVoted] = useState(false);
   const [count, setCount] = useState<number>(0);
@@ -25,6 +29,15 @@ export default function UpvoteButton({
   const toast = useToast();
 
   useEffect(() => {
+    // Seed from initial props when available
+    if (typeof initialCount === 'number') setCount(initialCount);
+    if (typeof initialVoted === 'boolean') setVoted(initialVoted);
+
+    // If both initial values are provided, skip the extra GET
+    if (typeof initialCount === 'number' && typeof initialVoted === 'boolean') {
+      return;
+    }
+
     let cancelled = false;
     async function load() {
       try {
@@ -41,7 +54,7 @@ export default function UpvoteButton({
     return () => {
       cancelled = true;
     };
-  }, [slug, isSignedIn]);
+  }, [slug, isSignedIn, initialCount, initialVoted]);
 
   const toggle = () => {
     if (!isSignedIn) {

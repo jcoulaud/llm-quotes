@@ -10,12 +10,14 @@ export default function FavoriteButton({
   className = '',
   style,
   onUnfavorite,
+  initialFavorited,
 }: {
   slug: string;
   size?: number;
   className?: string;
   style?: CSSProperties;
   onUnfavorite?: () => void;
+  initialFavorited?: boolean;
 }) {
   const [fav, setFav] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -24,6 +26,15 @@ export default function FavoriteButton({
   const toast = useToast();
 
   useEffect(() => {
+    // Seed from list data when available
+    if (typeof initialFavorited === 'boolean') {
+      setFav(initialFavorited);
+      // If we have initial value, do not re-fetch on mount
+      if (!isSignedIn) return;
+      return;
+    }
+
+    // Otherwise, only fetch if signed in
     let cancelled = false;
     async function check() {
       if (!isSignedIn) {
@@ -42,7 +53,7 @@ export default function FavoriteButton({
     return () => {
       cancelled = true;
     };
-  }, [slug, isSignedIn]);
+  }, [slug, isSignedIn, initialFavorited]);
 
   const toggle = () => {
     if (!isSignedIn) {

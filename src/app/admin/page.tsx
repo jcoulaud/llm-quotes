@@ -46,7 +46,7 @@ export default function AdminPage() {
   const fetchQuotes = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await fetch(`/api/quotes/list?status=${filter}`);
+      const response = await fetch(`/api/quotes/list?status=${filter}&includeIds=true`);
       const data = await response.json();
       
       if (response.ok) {

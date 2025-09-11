@@ -3,11 +3,11 @@
 import FavoriteButton from '@/components/FavoriteButton';
 import UpvoteButton from '@/components/UpvoteButton';
 import { formatDateOnly, getStatusColor } from '@/lib/utils';
-import type { QuoteDTO } from '@/types/quote';
+import type { BaseQuoteDTO } from '@/types/quote';
 import Link from 'next/link';
 
 interface QuoteCardProps {
-  quote: QuoteDTO;
+  quote: BaseQuoteDTO;
   showStatus?: boolean;
   onUnfavorite?: () => void;
 }
@@ -18,12 +18,19 @@ export default function QuoteCard({ quote, showStatus = true, onUnfavorite }: Qu
   return (
     <div className={cardClass}>
       {/* Upvote at top-left */}
-      <UpvoteButton slug={quote.slug} variant='chip' className='absolute top-2 left-2' />
+      <UpvoteButton
+        slug={quote.slug}
+        variant='chip'
+        className='absolute top-2 left-2'
+        initialVoted={quote.votedByMe}
+        initialCount={typeof quote.votesCount === 'number' ? quote.votesCount : undefined}
+      />
       {/* Favorite in top-right */}
       <FavoriteButton
         slug={quote.slug}
         size={18}
         className='absolute top-2 right-2'
+        initialFavorited={quote.favoritedByMe}
         onUnfavorite={onUnfavorite}
       />
       <div className='flex-grow mt-6'>
