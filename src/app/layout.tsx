@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import ToastProvider from "@/components/ToastProvider";
 import { ClerkProvider } from "@clerk/nextjs";
 import { clerkAppearance } from "@/lib/clerkAppearance";
+import PlausibleProvider from "next-plausible";
 
 export const metadata: Metadata = {
   // Ensures all relative metadata URLs resolve as absolute
@@ -47,9 +48,15 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const plausibleDomain = new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://llmquotes.com').hostname;
   return (
     <html lang="en">
       <body suppressHydrationWarning>
+        <PlausibleProvider
+          domain={plausibleDomain}
+          enabled={process.env.NODE_ENV === "production"}
+          trackOutboundLinks
+        >
         {process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY ? (
           <ClerkProvider signInUrl="/sign-in" signUpUrl="/sign-up" appearance={clerkAppearance}>
             <div className="grid-overlay"></div>
@@ -143,6 +150,7 @@ export default function RootLayout({
             </ToastProvider>
           </>
         )}
+        </PlausibleProvider>
       </body>
     </html>
   );
