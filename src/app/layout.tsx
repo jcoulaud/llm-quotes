@@ -75,6 +75,14 @@ export default function RootLayout({
                     </div>
                     <div className="flex gap-6">
                       <a
+                        href="https://github.com/jcoulaud/llm-quotes"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm font-medium transition-colors"
+                      >
+                        GitHub
+                      </a>
+                      <a
                         href="https://x.com/LlmQuotes"
                         target="_blank"
                         rel="noopener noreferrer"
@@ -112,6 +120,14 @@ export default function RootLayout({
                       </a>
                     </div>
                     <div className="flex gap-6">
+                      <a
+                        href="https://github.com/jcoulaud/llm-quotes"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm font-medium transition-colors"
+                      >
+                        GitHub
+                      </a>
                       <a
                         href="https://x.com/LlmQuotes"
                         target="_blank"
