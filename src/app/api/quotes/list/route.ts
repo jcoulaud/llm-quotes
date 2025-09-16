@@ -168,6 +168,8 @@ export async function GET(request: NextRequest) {
       status: q.status,
       slug: q.slug,
       createdAt: q.createdAt,
+      // Include scheduled time for admin views (includeIds=true)
+      ...(includeIds ? { scheduledFor: q.scheduledFor ?? undefined } : {}),
       postedAt: q.postedAt ?? undefined,
       tweetId: q.tweetId ?? undefined,
       views: q.views,
