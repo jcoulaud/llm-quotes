@@ -74,10 +74,26 @@ export default async function Home() {
 
   return (
     <div>
-      <section className='pt-20 pb-12 relative'>
+      <section className='pt-12 pb-12 relative'>
         <div className='decoration decoration-circle absolute top-10 left-10 opacity-20'></div>
         <div className='decoration decoration-square absolute bottom-8 right-10 opacity-20'></div>
         <div className='nb-container'>
+          <div className='flex justify-center md:justify-start mb-6'>
+            <a
+              href='https://www.producthunt.com/products/llm-quotes?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-llm-quotes'
+              target='_blank'
+              rel='noopener noreferrer'
+              className='inline-flex'
+              aria-label='View LLM Quotes on Product Hunt'>
+              <img
+                src='https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1017263&theme=light&t=1758120780129'
+                alt='LLM Quotes on Product Hunt'
+                width={180}
+                height={39}
+                style={{ maxWidth: '100%', height: 'auto' }}
+              />
+            </a>
+          </div>
           <h1 className='hero-text mb-6'>The best of the worst LLM replies, all in one place.</h1>
           <p className='subtitle mb-6 max-w-xl'>
             Real outputs from ChatGPT, Claude, Grok, Gemini, and more. Submit your favorites — the
@@ -91,7 +107,7 @@ export default async function Home() {
             </a>
             .
           </p>
-          <div className='flex flex-wrap gap-x-4 gap-y-4'>
+          <div className='flex flex-wrap items-center gap-x-4 gap-y-4 w-full'>
             <SubmitQuoteButton />
             <Link href='/quotes' className='brutal-button ghost'>
               Browse All
