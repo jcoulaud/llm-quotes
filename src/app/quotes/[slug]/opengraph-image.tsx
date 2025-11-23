@@ -23,8 +23,8 @@ async function getQuote(slug: string): Promise<Quote | null> {
   }
 }
 
-export default async function Image({ params }: { params: { slug: string } }) {
-  const { slug } = params;
+export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   const quote = await getQuote(slug);
 
   // Inline the brand image as a data URI from /public to avoid header/URL issues
