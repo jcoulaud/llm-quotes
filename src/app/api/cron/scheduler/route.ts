@@ -71,6 +71,12 @@ export async function GET(request: NextRequest) {
       }
     }
 
+    console.log('Scheduler completed:', {
+      processed: results.length,
+      scheduledQuotesFound: scheduledQuotes.length,
+      results,
+    });
+
     return NextResponse.json({
       processed: results.length,
       results,
