@@ -31,8 +31,8 @@ async function handleAdminProtection(request: NextRequest) {
 
 const hasClerk = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
 
-// Use Clerk middleware when configured; otherwise, fall back to admin-only protection
-export default hasClerk
+// Use Clerk proxy when configured; otherwise, fall back to admin-only protection
+export const proxy = hasClerk
   ? clerkMiddleware(
       async (auth, request) => {
         // Protect favorites and votes pages and APIs with Clerk
@@ -59,7 +59,7 @@ export default hasClerk
         signUpUrl: '/sign-up',
       },
     )
-  : async function middleware(request: NextRequest) {
+  : async function proxy(request: NextRequest) {
       // No Clerk configured: keep admin protection only
       const adminResult = await handleAdminProtection(request);
       return adminResult ?? NextResponse.next();
